@@ -1,0 +1,1706 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>黑马程序员Netty学习笔记 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="认真的 Netty 源码解析（一）本文又是一篇源码分析文章，其实除了 Doug Lea 的并发包源码，我是不太爱写源码分 - 掘金 1没准以后有用  C10K问题解析-CSDN博客 NIO基础non-blocking io 非阻塞IO 三大组件Channel与stream的区别 channel类似于stream，是读写数据的双向通道 可以从channel将数据读入buffer，也可以将buffer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="黑马程序员Netty学习笔记">
+<meta property="og:url" content="http://example.com/2025/01/29/netty/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="认真的 Netty 源码解析（一）本文又是一篇源码分析文章，其实除了 Doug Lea 的并发包源码，我是不太爱写源码分 - 掘金 1没准以后有用  C10K问题解析-CSDN博客 NIO基础non-blocking io 非阻塞IO 三大组件Channel与stream的区别 channel类似于stream，是读写数据的双向通道 可以从channel将数据读入buffer，也可以将buffer">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-01-29T14:12:24.000Z">
+<meta property="article:modified_time" content="2025-05-29T12:59:00.891Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="开发技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "黑马程序员Netty学习笔记",
+  "url": "http://example.com/2025/01/29/netty/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2025-01-29T14:12:24.000Z",
+  "dateModified": "2025-05-29T12:59:00.891Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/01/29/netty/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '黑马程序员Netty学习笔记',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">黑马程序员Netty学习笔记</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">黑马程序员Netty学习笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-29T14:12:24.000Z" title="发表于 2025-01-29 22:12:24">2025-01-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-29T12:59:00.891Z" title="更新于 2025-05-29 20:59:00">2025-05-29</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903704487804941">认真的 Netty 源码解析（一）本文又是一篇源码分析文章，其实除了 Doug Lea 的并发包源码，我是不太爱写源码分 - 掘金</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">没准以后有用</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/chinawangfei/article/details/102780959">C10K问题解析-CSDN博客</a></p>
+<h1 id="NIO基础"><a href="#NIO基础" class="headerlink" title="NIO基础"></a>NIO基础</h1><p><strong>non-blocking io 非阻塞IO</strong></p>
+<h2 id="三大组件"><a href="#三大组件" class="headerlink" title="三大组件"></a>三大组件</h2><h3 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h3><p><strong>与stream的区别</strong></p>
+<p>channel类似于stream，是读写数据的双向通道</p>
+<p>可以从channel将数据读入buffer，也可以将buffer数据写入channel</p>
+<p>但之前的stream要么是输入，要么是输出</p>
+<p>channel较stream更底层</p>
+<p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250213122959231.png" alt="image-20250213122959231"></p>
+<p><strong>常见的channel</strong></p>
+<ul>
+<li>FileChannel：文件</li>
+<li>DatagramChannel：UDP</li>
+<li>SocketChannel：TCP，服务器和客户端都可以使用</li>
+<li>ServerSocketChannel：TCP，服务器专用</li>
+</ul>
+<h3 id="buffer"><a href="#buffer" class="headerlink" title="buffer"></a>buffer</h3><p>用于缓冲读写数据</p>
+<p><strong>常见buffer</strong></p>
+<ul>
+<li>ByteBuffer：抽象类<ul>
+<li>MapperByteBuffer</li>
+<li>DirectByteBuffer</li>
+<li>HeapByteBuffer</li>
+</ul>
+</li>
+<li>ShortBuffer</li>
+<li>IntBuffer</li>
+<li>LongBuffer</li>
+<li>FloatBuffer</li>
+<li>DoubleBuffer</li>
+<li>CharBuffer</li>
+</ul>
+<h3 id="selector"><a href="#selector" class="headerlink" title="selector"></a>selector</h3><p><strong>服务器的设计演化</strong></p>
+<ul>
+<li><p>多线程版设计</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213131027367.png" alt="image-20250213131027367"></p>
+<ul>
+<li>缺点<ul>
+<li>内存占用高</li>
+<li>线程上下文切换成本高</li>
+<li>只适合连接数少的场景，一个客户端使用一个线程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>线程池版设计</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213131440089.png" alt="image-20250213131440089"></p>
+<ul>
+<li>缺点<ul>
+<li>阻塞模式下，线程仅能处理一个socket连接</li>
+<li>仅适合短连接场景</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>selector版设计</p>
+<ul>
+<li>selector的作用就是配合一个线程来管理多个channel，获取这些channel上发生的事件，channel工作在非阻塞模式下，不会让一个线程死等一个channel</li>
+<li>适合连接数特别多，但流量低的场景</li>
+<li>调用selector的select()会阻塞直到channel发生读写就绪事件，事件发生,select方法就会返回这些事件给thread处理</li>
+</ul>
+</li>
+</ul>
+<h2 id="ByteBuffer"><a href="#ByteBuffer" class="headerlink" title="ByteBuffer"></a>ByteBuffer</h2><p><strong>使用实例代码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213134726037.png" alt="image-20250213134726037"></p>
+<ul>
+<li>向buffer写入数据，调用channel.read(buffer)</li>
+<li>调用flip()切换至读模式</li>
+<li>从buffer读取数据，例如调用buffer.get()</li>
+<li>调用clear()或compact()切换至写模式</li>
+<li>重复上述步骤</li>
+</ul>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p><strong>重要属性</strong></p>
+<ul>
+<li>capacity</li>
+<li>position</li>
+<li>limit</li>
+</ul>
+<p><strong>流程</strong></p>
+<ul>
+<li>开始</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213135141612.png" alt="image-20250213135141612"></p>
+<ul>
+<li>写模式下position是写入位置，limit等于容量，读入四个字节，状态如下</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213135221481.png" alt="image-20250213135221481"></p>
+<ul>
+<li>flip动作发生后,position切换为读取位置，limit切换为读取限制</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213140703016.png" alt="image-20250213140703016"></p>
+<ul>
+<li>读取4个字节后状态</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213140716163.png" alt="image-20250213140716163"></p>
+<ul>
+<li>clear动作发生后状态</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213140726604.png" alt="image-20250213140726604"></p>
+<ul>
+<li>compact方法，把未读完的部分向前压缩，然后切换至写模式，这里实际上原来的c和d的位置是不会清空的，等待再次写入时进行覆写</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213142744739.png" alt="image-20250213142744739"></p>
+<h3 id="常见方法"><a href="#常见方法" class="headerlink" title="常见方法"></a>常见方法</h3><p><strong>分配空间</strong></p>
+<ul>
+<li>使用allocate方法为ByteBuffer分配空间，其它buffer类也有该方法<ul>
+<li>超过容量就会报错，只能进行重新分配</li>
+<li>netty对buffer进行加强，可以进行</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Bytebuffer</span> <span class="variable">buf</span> <span class="operator">=</span> ByteBuffer.allocate(<span class="number">16</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>两种分配的API<ul>
+<li>allocate()，分配的buffer是java.nio.HeapByteBuffer<ul>
+<li>分配的是java堆内存</li>
+<li>读写效率较低，较直接内存多一次用户态的拷贝</li>
+<li>可以被gc回收，但是也可以说会被gc影响</li>
+</ul>
+</li>
+<li>allocateDirect()，分配的buffer是java.nio.DirectByteBuffer<ul>
+<li>分配的是java直接内存</li>
+<li>读写效率高</li>
+<li>属于系统内存，不能被gc回收，需要unsafe释放</li>
+<li>调用操作系统分配内存，分配内存效率低</li>
+<li>使用不当可能造成内存泄漏</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>向buffer中写入数据</strong></p>
+<ul>
+<li>调用channel的read方法</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">readBytes</span> <span class="operator">=</span> channel.read(buf);</span><br><span class="line"><span class="comment">//返回值为-1代表读取失败</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用buffer自己的put方法<ul>
+<li>写入字节</li>
+<li>写入字节数组</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">buf.put((<span class="type">byte</span>)<span class="number">127</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>从buffer中读取数据</strong></p>
+<ul>
+<li>调用channel的write方法</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">writeBytes</span> <span class="operator">=</span> channel.write(buf);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用buffer自己的get方法<ul>
+<li>会让position读指针向后走，如果想重复读取数据<ul>
+<li>可以调用rewind方法将position重新置为0</li>
+<li>调用get(int i)方法获取索引i的内容，不会移动读索引的位置</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">byte</span> <span class="variable">b</span> <span class="operator">=</span> buf.get();</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>mark()方法和reset()方法</strong></p>
+<ul>
+<li>调用buffer.mark()会记录当前position位置</li>
+<li>调用buffer.reset()会将position重置到mark的位置</li>
+</ul>
+<p><strong>字符串与ByteBuffer互转</strong></p>
+<p>&#x3D;》</p>
+<ul>
+<li>调用put()和getBytes()方法<ul>
+<li>返回的是写模式，所以不能直接用decode转换回字符串</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ByteBuffer</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBuffer.allocate(<span class="number">10</span>); buffer.put(<span class="string">&quot;hello&quot;</span>.getBytes());</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用Charset中的方法<ul>
+<li>返回的是读模式</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ByteBUffer</span> <span class="variable">buffer</span> <span class="operator">=</span> StandardCharsets.UTF_8.encode(<span class="string">&quot;hello&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用wrap方法<ul>
+<li>返回的是读模式</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ByteBuffer</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBuffer.wrap(<span class="string">&quot;hello&quot;</span>.getBytes());</span><br></pre></td></tr></table></figure>
+
+<p>《&#x3D;</p>
+<ul>
+<li>调用Charset中的方法</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> StandardCharsets.UTF_8.decode(buffer).toString();</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="Scattering-Reads"><a href="#Scattering-Reads" class="headerlink" title="Scattering Reads"></a>Scattering Reads</h3><p><strong>分散读取</strong></p>
+<p>将从单个文本文件读出的数据填充到多个Buffer</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213164401097.png" alt="image-20250213164401097"></p>
+<h3 id="Gathering-Writes"><a href="#Gathering-Writes" class="headerlink" title="Gathering Writes"></a>Gathering Writes</h3><p><strong>合并写入</strong></p>
+<p>将多个Buffer内容写入到一个文件中</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213164349504.png" alt="image-20250213164349504"></p>
+<p>分散读取和和并写入主要是为了减少数据在多个ByteBuffer之间的拷贝赋值次数，变相提高了效率</p>
+<h3 id="粘包半包分析"><a href="#粘包半包分析" class="headerlink" title="粘包半包分析"></a>粘包半包分析</h3><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213165756877.png" alt="image-20250213165756877"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213165723991.png" alt="image-20250213165723991"></p>
+<h2 id="文件编程"><a href="#文件编程" class="headerlink" title="文件编程"></a>文件编程</h2><p>重点是网络编程，文件编程作了解</p>
+<h3 id="FileChannel"><a href="#FileChannel" class="headerlink" title="FileChannel"></a>FileChannel</h3><p><strong>注意</strong></p>
+<ul>
+<li>FileChannel只能工作在阻塞模式下，所以不能配合selector一起使用</li>
+</ul>
+<p><strong>获取方式</strong></p>
+<p>不能直接打开FileChannel</p>
+<p>使用下面三个类中的getChannel()方法</p>
+<ul>
+<li>通过FileInPutStream获取<ul>
+<li>获取的channel只读</li>
+</ul>
+</li>
+<li>通过FileOutputStream获取<ul>
+<li>获取的channel只写</li>
+</ul>
+</li>
+<li>通过RandomAccessFile获取<ul>
+<li>获取的channel能否读写根据构造RandomAccessFile时的读写模式决定（<strong>设置读写模式为rw即为可以读写</strong>）</li>
+</ul>
+</li>
+</ul>
+<p><strong>读取</strong></p>
+<p>从channel读取数据填充ByteBuffer</p>
+<ul>
+<li>返回值表示读到了多少字节</li>
+<li>返回值为-1表示到达了文件的末尾</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">readBytes</span> <span class="operator">=</span> channel.read(buffer);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>写入</strong></p>
+<p>后续用的比较多主要是SocketChannel</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BytebUffer buffer = ...;</span><br><span class="line">buffer.put(...); //存入数据</span><br><span class="line">buffer.flip(); //切换读模式</span><br><span class="line"></span><br><span class="line">while(buffer.hasRemaining())&#123;</span><br><span class="line">	channel.write(buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在while中调用channel.write是因为write方法并不能保证一次将buffer中的内容全部写入channel</li>
+</ul>
+<p><strong>关闭</strong></p>
+<p>channel必须关闭</p>
+<p>使用FileInPutStream，FileOutputStream，RandomAccessFile的close方法即可（间接调用channel的close方法）</p>
+<p><strong>位置</strong></p>
+<ul>
+<li>获取当前位置</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="variable">pos</span> <span class="operator">=</span> channel.position();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置当前位置<ul>
+<li>若设置为文件末尾<ul>
+<li>此时读取返回-1</li>
+<li>此时写入会追加内容，如果position超过了文件末尾，再写入时新内容和原末尾之间会有空洞（00）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="variable">newPos</span> <span class="operator">=</span> ...;</span><br><span class="line">channel.position(newPos);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>大小</strong></p>
+<p>使用size()方法获取文件的大小</p>
+<p><strong>强制写入</strong></p>
+<p>操作系统出于性能的考虑，会将数据缓存，而非立刻写入磁盘</p>
+<p>调用force(true)方法将文件内容和元数据（文件的权限等信息）立刻写入磁盘</p>
+<h3 id="两个Channel传输数据"><a href="#两个Channel传输数据" class="headerlink" title="两个Channel传输数据"></a>两个Channel传输数据</h3><p><strong>实例代码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213173605848.png" alt="image-20250213173605848"></p>
+<ul>
+<li>效率高于直接使用文件输入输出流</li>
+<li>底层会利用操作系统的零拷贝进行优化</li>
+<li>最大可以传输2G数据</li>
+<li>transferTo的返回值是实际传输的数据量</li>
+</ul>
+<h3 id="Path"><a href="#Path" class="headerlink" title="Path"></a>Path</h3><p>JDK7引入Path和Path类</p>
+<ul>
+<li>Path表示文件路径</li>
+<li>Paths是工具类，用于获取Path实例</li>
+</ul>
+<p><strong>使用示例</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213174150158.png" alt="image-20250213174150158"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213174330874.png" alt="image-20250213174330874"></p>
+<ul>
+<li><code>.</code>表示当前路径</li>
+<li><code>..</code>表示上一级路径</li>
+</ul>
+<h3 id="Files"><a href="#Files" class="headerlink" title="Files"></a>Files</h3><p>JDK7新增API</p>
+<p><strong>检查文件是否存在</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Path</span> <span class="variable">path</span> <span class="operator">=</span> Paths.get(<span class="string">&quot;path&quot;</span>);</span><br><span class="line">Files.exists(path);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>创建一级目录</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Path</span> <span class="variable">path</span> <span class="operator">=</span> Paths.get(<span class="string">&quot;path/a&quot;</span>);</span><br><span class="line">Files.createDirectory(path);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>若目录已存在，会抛异常FileAlreadyExistsException</li>
+<li>不能一次创建多级目录，否则会抛异常NoSuchFileException</li>
+</ul>
+<p><strong>创建多级目录</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Path path = Paths.get(&quot;path/a/b&quot;);</span><br><span class="line">Files.createDirectories(&quot;path&quot;);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>拷贝文件</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Path</span> <span class="variable">source</span> <span class="operator">=</span> Paths.get(<span class="string">&quot;path1&quot;</span>);</span><br><span class="line"><span class="type">Path</span> <span class="variable">target</span> <span class="operator">=</span> Paths.get(<span class="string">&quot;path2&quot;</span>);</span><br><span class="line"></span><br><span class="line">Files.copy(source, target);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>若文件已存在，抛异常FileAlreadyExistsException</li>
+<li>若希望用source覆盖掉target，需要用StandardCopyOption来控制</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Files.copy(source, target，</span><br><span class="line">StandardCopyOption.REPLACE_EXISTING);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>相较于transferTo来说是调用操作系统底层的命令实现的，两者效率都比较高</li>
+</ul>
+<p><strong>移动文件</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Path</span> <span class="variable">source</span> <span class="operator">=</span> Paths.get(<span class="string">&quot;path1&quot;</span>);</span><br><span class="line"><span class="type">Path</span> <span class="variable">target</span> <span class="operator">=</span> Paths.get(<span class="string">&quot;path2&quot;</span>);</span><br><span class="line"></span><br><span class="line">Files.move(source, target,</span><br><span class="line">StandardCopyOption.ATOMIC_MOVE);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>StandardCopyOption.ATOMIC_MOVE保证文件移动的原子性</li>
+</ul>
+<p><strong>删除文件</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Path target = Paths.get(&quot;path&quot;);</span><br><span class="line"></span><br><span class="line">Files.delete(target);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>若文件不存在，会抛出NoSuchFileException</li>
+</ul>
+<p><strong>删除目录</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Path target = Paths.get(&quot;path&quot;);</span><br><span class="line"></span><br><span class="line">Files.delete(target);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>若目录中还有内容，会抛出DirectoryNotEmptyException异常</li>
+</ul>
+<p><strong>遍历文件目录</strong></p>
+<p>JDK7提供了walkFileTree方法</p>
+<p>使用到了访问者设计模式</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213182330024.png" alt="image-20250213182330024"></p>
+<ul>
+<li>可以重写SimpleFileVistor中的下述方法</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213182550800.png" alt="image-20250213182550800"></p>
+<p><strong>删除多级目录</strong></p>
+<p>使用walkFileTree实现</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213182820294.png" alt="image-20250213182820294"></p>
+<p><strong>拷贝多级目录</strong></p>
+<p>此时使用walk()方法</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213183112947.png" alt="image-20250213183112947"></p>
+<h2 id="网络编程"><a href="#网络编程" class="headerlink" title="网络编程"></a>网络编程</h2><h3 id="非阻塞-vs-阻塞"><a href="#非阻塞-vs-阻塞" class="headerlink" title="非阻塞 vs 阻塞"></a>非阻塞 vs 阻塞</h3><p><strong>阻塞</strong></p>
+<ul>
+<li>无数据可读时，包括数据赋值过程中，线程必须阻塞等待，不会占用CPU，但是线程相当于限制</li>
+<li>32位JVM一个线程320K</li>
+<li>64位JVM一个线程1024K</li>
+<li>为减少线程数，需要采用线程池计数</li>
+<li>但即便使用线程池，若有很多连接简历，长时间Inactive，会阻塞线程池中所有线程</li>
+</ul>
+<p><strong>服务端示例代码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213190334348.png" alt="image-20250213190334348"></p>
+<p><strong>客户端示例代码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213190346225.png" alt="image-20250213190346225"></p>
+<p><strong>非阻塞</strong></p>
+<ul>
+<li>在某个channel没有可读事件时，线程不必阻塞，可以去处理其它有可读事件的channel</li>
+<li>数据赋值过程中，线程实际还是阻塞的（AIO改进的地方）</li>
+<li>写数据时，线程只是等待数据写入channel即可，无需等channel通过网络把数据发送出去</li>
+</ul>
+<p><strong>服务端示例代码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213190235845.png" alt="image-20250213190235845"></p>
+<ul>
+<li>非阻塞的ServerSocketChannel使得accept()方法不会阻塞</li>
+<li>非阻塞的SocketChannel使得read()方法不会阻塞</li>
+</ul>
+<p><strong>客户端示例代码</strong></p>
+<p><code>相对于阻塞式不做改变</code></p>
+<p><strong>多路复用</strong></p>
+<p>线程必须配合Selector才能完成对多个channel可读写事件的监控，称之为多路复用</p>
+<ul>
+<li>多路复用仅针对网络IO、普通文件IO不能利用多路复用</li>
+<li>若不用selector的非阻塞模式，那么channel读取到的字节很多时候都是0，而selector保证<ul>
+<li>有可读事件才去读取</li>
+<li>有可连接事件才去连接</li>
+<li>有可写事件才去写入<ul>
+<li>限于网络传输能力，channel未必时时可写，一旦channel可写，会触发selector的可写事件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a>Selector</h3><p><strong>示例代码</strong></p>
+<ul>
+<li>处理accept()事件</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213225516643.png" alt="image-20250213225516643"></p>
+<ul>
+<li>使用interestOps来将SelectionKey绑定到关注的事件上</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213225621179.png" alt="image-20250213225621179"></p>
+<ul>
+<li><p>对于select()方法，当没有事件触发时使得当前线程处于阻塞状态，但是若有事件未处理，就会进入非阻塞状态。若事件一直得不到处理，就会导致while循环进入空转</p>
+<ul>
+<li>还有select(long timeout)方法，阻塞直到绑定事件发生，或超时(ms)</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> selector.select(<span class="type">long</span> t);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>selectNow()方法，不会阻塞，不管有没有事件，立刻返回，根据返回值检查是否有事件</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> selector.selectNow();</span><br><span class="line"><span class="comment">//返回事件数量</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>select何时不阻塞</p>
+<ul>
+<li>事件发生时<ul>
+<li>客户端发起连接请求，触发accept事件</li>
+<li>客户端发送数据，客户端正常关闭，异常关闭时，都会触发read事件；若发送数据大于buffer缓冲区，会触发多次读取事件</li>
+<li>channel可写，会触发write事件</li>
+<li>在linux下nio bug发生时</li>
+</ul>
+</li>
+<li>调用selector.wakeup()</li>
+<li>调用selector.close()</li>
+<li>selector所在线程interrupt</li>
+</ul>
+</li>
+<li><p>若实在不能处理某事件，可以调用cancel()方法取消当前的SelectionKey任务</p>
+</li>
+<li><p>如果要处理多种事件，可以调用函数判断当前key属于什么类型的事件</p>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213232734328.png" alt="image-20250213232734328"></p>
+<ul>
+<li>处理read()事件</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213232806390.png" alt="image-20250213232806390"></p>
+<ul>
+<li>selector在处理过selectedKeys中的任务后，需要手动将该任务对应的key删除，因为selector只会不断地向selectedKeys中添加key，而不会删除key，所以要手动调用remove()方法</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213233606169.png" alt="image-20250213233606169"></p>
+<ul>
+<li>如果在执行read事件时，出现客户端断开，就会导致服务器也断开<ul>
+<li>若客户端异常断开，捕获IO异常，对当前的read任务key进行cancel</li>
+<li>若read(buffer)返回值为-1，说明客户端调用close()方法正常断开，此时也要cancel掉key</li>
+</ul>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213234358174.png" alt="image-20250213234358174"></p>
+<ul>
+<li>处理信息的边界<ul>
+<li>固定消息长度，数据包大小一样，服务器按预定长度读取，缺点是在这种解决方案中，我们必须找到一个包的最大值作为固定值，而一次只接受一个包，这对带宽来讲是极大的浪费</li>
+<li>按分隔符拆分，效率低，因为需要逐个字节地遍历到分隔符</li>
+<li>TLV格式，即Type类型，Length长度，Value数据。类型和长度已知地情况下，可以方便获取信息大小，分配合适地buffer，缺点是buffer需要提前分配，如果内容过大，会影响server吞吐量<ul>
+<li>HTTP1.1是TLV格式</li>
+<li>HTTP2.0是LTV格式</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214001005173.png" alt="image-20250214001005173"></p>
+<ul>
+<li>采用第二种方式进行改进</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214001621482.png" alt="image-20250214001621482"></p>
+<ul>
+<li>split函数是之前实现过的</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214001650289.png" alt="image-20250214001650289"></p>
+<ul>
+<li>但是之前实现的split函数并没有考虑到对于一段超过buffer的消息的处理，即第一次处理只能收到一部分信息，找不到信息的分隔符</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214002001179.png" alt="image-20250214002001179"></p>
+<ul>
+<li>首先要延长channel对应buffer的生命周期，方法是在注册SocketChannel时注册buffer为对应channel的附件</li>
+<li>其次要在判断需要扩容时（即split函数compact后position仍位于buffer尾），扩容buffer，并使用attach函数将新buffer注册为当前channel的附件</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214003006831.png" alt="image-20250214003006831"></p>
+<ul>
+<li><p>ByteBuffer大小分配问题</p>
+<ul>
+<li>ByteBuffer过大，若一个ByteBuffer占用1M，则支持百万连接就要1Tb内存，因此需要设计大小可变的ByteBuffer<ul>
+<li>一种思路是首先分配一个较小的buffer，若数据不够再分配更大的buffer，将原buffer数据拷贝到新buffer上，优点是消息连续容易处理，缺点是数据拷贝耗费性能</li>
+<li>另一种思路是用多个数组组成buffer，一个数组不够，多出的内容写入新的数组，与第一种思路的区别是消息存储不连续，解析复杂，优点是避免了拷贝引起的性能损耗</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>模拟服务端向客户端写数据</p>
+<ul>
+<li>服务端代码</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214004540033.png" alt="image-20250214004540033"></p>
+<ul>
+<li>客户端代码</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214004839350.png" alt="image-20250214004839350"></p>
+</li>
+<li><p>这样实现有一个问题，即不是每次服务端请求写缓存都能写成功，所以就会出现写线程不可写时还是一直在请求写缓存，所以要处理写线程，在不可写的时间段去处理别的事务</p>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214010500201.png" alt="image-20250214010500201"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214010518837.png" alt="image-20250214010518837"></p>
+<ul>
+<li><p>利用多线程优化，充分利用多核CPU</p>
+<ul>
+<li>分两组选择器<ul>
+<li>单线程配一个选择器，专门处理accept事件</li>
+<li>创建CPU核心数的线程，每个线程配一个选择器，轮流处理read事件</li>
+</ul>
+</li>
+<li>监听accept事件的主线程</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214012905419.png" alt="image-20250214012905419"></p>
+<ul>
+<li>worker线程</li>
+</ul>
+<p><code>下面中的成员变量worker都改成selector</code></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214013426164.png" alt="image-20250214013426164"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214013255131.png" alt="image-20250214013255131"></p>
+</li>
+<li><p>现在将worker关联到boss线程上，下面是boss线程改动的代码片段</p>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214013902216.png" alt="image-20250214013902216"></p>
+<ul>
+<li><p>但现在的代码存在问题，boss线程中先调用了worker的相关初始化操作，使得worker线程中的selector进入select()的阻塞状态，进一步影响到了boss线程中针对selector的register()方法执行（无法获得锁）</p>
+<ul>
+<li>修改的boss代码片段</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214015236906.png" alt="image-20250214015236906"></p>
+<ul>
+<li>修改的worker代码片段</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214015317369.png" alt="image-20250214015317369"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214015418476.png" alt="image-20250214015418476"></p>
+<ul>
+<li>另一种worker代码的解决方式<ul>
+<li>先wakeup后select与先select后wakeup是一样的</li>
+</ul>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214015630659.png" alt="image-20250214015630659"></p>
+</li>
+<li><p>获取当前机器线程数方法为Runtime.getRuntime.availableProcessors()</p>
+<ul>
+<li>如果是工作在docker容器下，由于容器不是物理隔离的，拿到的是物理CPU个数，而不是容器申请时的个数</li>
+<li>该问题在JDK10中修复，使用JVM参数UserContainerSupport配置，默认开启</li>
+</ul>
+</li>
+<li><p>基于现有线程数创建多worker环境</p>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214023550128.png" alt="image-20250214023550128"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214023647303.png" alt="image-20250214023647303"></p>
+<h2 id="NIO-vs-BIO"><a href="#NIO-vs-BIO" class="headerlink" title="NIO vs BIO"></a>NIO vs BIO</h2><h3 id="stream-vs-channel"><a href="#stream-vs-channel" class="headerlink" title="stream vs channel"></a>stream vs channel</h3><ul>
+<li>stream不会自动缓冲数据，channel会利用系统提供的发送和接收缓冲区（更为底层）</li>
+<li>stream仅支持阻塞API，channel同时支持阻塞与非阻塞API，网络channel可配合selector实现多路复用</li>
+<li>二者均为全双工，即读写可以同时进行</li>
+</ul>
+<h3 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h3><p>当调用一次channel.read()或stream.read()后，会切换到操作系统内核态来完成真正的数据读取，读取分为两个阶段</p>
+<ul>
+<li>等待数据阶段</li>
+<li>复制数据阶段</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214024256648.png" alt="image-20250214024256648"></p>
+<p><strong>几种阻塞情形</strong></p>
+<ul>
+<li>阻塞IO <strong>BIO</strong></li>
+<li>非阻塞IO <strong>NIO</strong></li>
+<li>多路复用 </li>
+<li>信号驱动</li>
+<li>异步IO <strong>AIO</strong><ul>
+<li>用户在用户态注册回调函数，系统管理事件完成并触发用户创建的回调函数执行</li>
+</ul>
+</li>
+</ul>
+<h3 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h3><p>传统IO将一个文件通过socket写出</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214030131072.png" alt="image-20250214030131072"></p>
+<p><strong>内部工作流程</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214030155284.png" alt="image-20250214030155284"></p>
+<ul>
+<li>java本身并不具备IO读写能力，故read方法调用后，要从java程序的用户态切换为内核态，去调用操作系统（Kernel）的读能力，将数据读入内核缓冲区，期间用户线程阻塞，操作系统使用DMA实现文件读，期间不会使用CPU</li>
+<li>从内核态切换回用户态，将数据从内核缓冲区读入用户缓冲区（byte[] buf），期间CPU参与拷贝，无法利用DMA</li>
+<li>调用write方法，此时将数据从用户缓冲区（byte[] buf）写入socket缓冲区，CPU参与拷贝</li>
+<li>接下来向网卡写数据，java也不具备这个能力，因此得从用户态切换到内核态，调用操作系统的写能力，使用DMA将socket缓冲区的数据写入网卡，不使用CPU</li>
+</ul>
+<p>中间环节较多，javaIO实际上不是物理设备级别的读写，而是缓存的复制，底层的真正读写是操作系统来完成的</p>
+<ul>
+<li>用户态与内核态切换3次</li>
+<li>数据拷贝4次</li>
+<li>这个操作是比较重量级的</li>
+</ul>
+<p><strong>NIO优化</strong></p>
+<p>通过DirectByteBuf</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214034634759.png" alt="image-20250214034634759"></p>
+<ul>
+<li>ByteBuffer.allocateDirect()分配的是操作系统内存，但这块内存是与java共享的</li>
+</ul>
+<p>这样java可以使用DirectByteBuf将堆外内存映射到JVM内存中来直接访问使用</p>
+<ul>
+<li>此内存不受JVM垃圾回收影响，所以内存地址固定，有利于IO读写</li>
+<li>java中的DirectByteBuf对象仅维护了此内存的虚引用，内存回收分为两步<ul>
+<li>DirectByteBuf对象被垃圾回收，将虚引用加入引用队列</li>
+<li>通过专门线程访问引用队列，根据虚引用释放堆外内存</li>
+</ul>
+</li>
+<li>减少一次数据拷贝，用户态与内核态切换次数没有减少</li>
+</ul>
+<p>进一步优化（底层采用linux2.1后提供的sendFile方法），java中对应着两个channel调用transferTo&#x2F;transferFrom方法拷贝数据</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214034614272.png" alt="image-20250214034614272"></p>
+<ul>
+<li>java调用transferTo方法后，从java程序用户态切换为内核态，使用DMA将数据读入内核缓冲区，不使用CPU</li>
+<li>数据从内核缓冲区传输到socket缓冲区，CPU会参与拷贝</li>
+<li>最后使用DMA将socket缓冲区的数据写入网卡，不会使用CPU</li>
+</ul>
+<p>在这种优化下</p>
+<ul>
+<li>只发生一次用户态与内核态的切换</li>
+<li>数据拷贝三次</li>
+</ul>
+<p>进一步优化（Linux2.4）</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214120714733.png" alt="image-20250214120714733"></p>
+<ul>
+<li>java调用transfer方法后，从java程序的用户态切换至内核态，使用DMA将数据读入内核缓冲区，不适用CPU</li>
+<li>将一些offset和length信息拷贝入socket缓冲区，几乎无消耗</li>
+<li>使用DMA将内核缓冲区的数据写入网卡，不适用CPU</li>
+</ul>
+<p>在这种优化下</p>
+<ul>
+<li>只发生一次用户态与内核态的切换</li>
+<li>数据拷贝两次</li>
+</ul>
+<p>所谓的零拷贝，并不是真正无拷贝，而是不会拷贝重复数据到JVM内存，即内核态和用户态没有拷贝操作</p>
+<p><strong>零拷贝的优点</strong></p>
+<ul>
+<li>更少的用户态与内核态的切换</li>
+<li>不适用CPU计算，金少CPU缓存共享</li>
+<li>零拷贝适合小文件传输</li>
+</ul>
+<h3 id="AIO"><a href="#AIO" class="headerlink" title="AIO"></a>AIO</h3><p>AIO用来解决数据复制阶段的阻塞问题</p>
+<ul>
+<li>同步：进行读写操作时，线程需等待结果</li>
+<li>异步：进行读写操作时，线程不必等待结果，由操作系统来通过回调方式由另外的线程获得结果</li>
+</ul>
+<p>异步模型需要底层操作系统Kernel（提供支持）</p>
+<ul>
+<li>Windows系统通过IOCP实现真正的异步IO</li>
+<li>Linux系统异步IO在2.6版本引入，底层实现是用多路复用模拟的异步IO，性能没有优势</li>
+<li>Netty不支持异步IO</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214122451387.png" alt="image-20250214122451387"></p>
+<h1 id="Netty入门"><a href="#Netty入门" class="headerlink" title="Netty入门"></a>Netty入门</h1><p><strong>是什么</strong></p>
+<p>Netty是一个异步的（多线程），基于事件驱动的网络应用框架，用于快速开发可维护、高性能的网络服务器和客户端</p>
+<p><strong>Netty的地位</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214122838411.png" alt="image-20250214122838411"></p>
+<p><strong>Netty的优势</strong></p>
+<ul>
+<li>Netty vs NIO<ul>
+<li>需要自己构建协议</li>
+<li>解决TCP传输问题，如粘包、半包</li>
+<li>epoll空轮询导致CPU100%，某个bug导致select方法不能阻塞</li>
+<li>对API进行增强，使之更易用，如FastThreadLocal &#x3D;&gt; ThreadLocal，ByteBuf &#x3D;&gt; ByteBuffer</li>
+</ul>
+</li>
+</ul>
+<h2 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h2><p>开发一个简单的服务器端和客户端</p>
+<ul>
+<li>客户端向服务器端发送hello,world</li>
+<li>服务器仅接收，不返回</li>
+</ul>
+<p><strong>流程</strong></p>
+<ul>
+<li>加入依赖</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214123544169.png" alt="image-20250214123544169"></p>
+<ul>
+<li><p>服务器端代码</p>
+<ul>
+<li><p>ServerBootstrap：启动器，负责组装Netty组件，启动服务器</p>
+</li>
+<li><p>NioEventLoopGroup()：事件循环组</p>
+<ul>
+<li>BossEventLoop</li>
+<li>WorkerEventLoop</li>
+<li>可以理解为多组selector和thread</li>
+</ul>
+</li>
+<li><p>NioServerSocketChannel.class：一种服务器的channel实现</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214124644307.png" alt="image-20250214124644307"></p>
+<ul>
+<li>从上到下分别是Linux的实现，mac的实现，NIO，BIO</li>
+</ul>
+</li>
+<li><p>child相当于worker，childHandler负责决定child能执行哪些操作</p>
+</li>
+<li><p>childInitializer即初始化channel，负责添加别的handler</p>
+<ul>
+<li>ch.pipeline().addLast()方法就是在添加具体handler<ul>
+<li>StringDecoder：将ByteBuf转换为字符串</li>
+<li>ChannelInboundHandlerAdapter：自定义handler</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>bind()方法用来绑定监听端口</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214124114526.png" alt="image-20250214124114526"></p>
+<ul>
+<li>客户端代码<ul>
+<li>Bootstrap：对标ServerBootstrap</li>
+<li>sync()：阻塞方法，直到连接建立转为非阻塞</li>
+<li>channel()：代表连接对象</li>
+</ul>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214125820961.png" alt="image-20250214125820961"></p>
+<p><strong>流程分析</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214134907147.png" alt="image-20250214134907147"></p>
+<p><strong>正确观念</strong></p>
+<ul>
+<li>channel是数据的通道</li>
+<li>msg理解为流动的数据，最初输入为ByteBuf，经过pipeline加工，会变成其它类型对象，最后输出又变为ByteBuf</li>
+<li>把handler理解为数据的处理工序<ul>
+<li>多道工序，合在一起就是pipeline，pipeline负责发布事件传递给每个handler，handler对自己感兴趣的事件进行处理</li>
+<li>handler分为inbound和Outbound两类</li>
+</ul>
+</li>
+<li>EventLoop理解为处理数据的工人<ul>
+<li>工人可以管理多个channel的IO操作，一旦工人负责某个channel，就要负责到底</li>
+<li>工人既可以执行IO操作，也可以进行任务处理。</li>
+<li>每个工人有任务队列，队列中可以对方多个channel的待处理任务，任务分为普通任务，定时任务</li>
+<li>工人按照pipeline顺序，依次按照handler的规划处理数据，可为每道工序指定不同的工人（出入的IO需要绑定，其它操作可以由不同工人处理）</li>
+</ul>
+</li>
+</ul>
+<h2 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h2><h3 id="EventLoop"><a href="#EventLoop" class="headerlink" title="EventLoop"></a>EventLoop</h3><p><strong>EventLoop</strong></p>
+<p>本质是一个单线程执行器（同时维护一个Selector），里面有run方法处理channel上源源不断的IO事件</p>
+<ul>
+<li><p>继承关系（接口多继承）</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214141924061.png" alt="image-20250214141924061"></p>
+<ul>
+<li>继承j.u.c.ScheduledExecutorService，因此包含线程池中所有的方法</li>
+<li>继承netty自己的OrderEventExecutor<ul>
+<li>提供boolean inEventLoop(Thread thread)方法判断一个线程是否属于此EventLoop</li>
+<li>提供parent方法来判断自己属于哪个EventLoopGroup</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>EventLoopGroup</strong></p>
+<p>一组EventLoop，channel一般调用EventLoopGroup中register方法来绑定其中一个EventLoop，后续该channel上的IO事件均由此EventLoop处理（保证IO事件处理时的线程安全）</p>
+<ul>
+<li>继承netty的EventExecutorGroup<ul>
+<li>实现Iterable接口提供遍历EventLoop的能力</li>
+<li>提供next方法获取集合中下一个EventLoop</li>
+</ul>
+</li>
+</ul>
+<h4 id="普通-定时任务"><a href="#普通-定时任务" class="headerlink" title="普通-定时任务"></a>普通-定时任务</h4><p><strong>示例代码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214142507075.png" alt="image-20250214142507075"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214142444256.png" alt="image-20250214142444256"></p>
+<ul>
+<li>若指定线程数为0，则会以Netty计算的默认线程数为准</li>
+</ul>
+<h4 id="IO任务"><a href="#IO任务" class="headerlink" title="IO任务"></a>IO任务</h4><p><strong>示例代码</strong></p>
+<ul>
+<li>服务端</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214143120343.png" alt="image-20250214143120343"></p>
+<ul>
+<li>客户端</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214143146176.png" alt="image-20250214143146176"></p>
+<p>对服务端进行分工细化，即分化出ServerSocketChannel和SocketChannel</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214143841149.png" alt="image-20250214143841149"></p>
+<p>对服务端的handler进行分工细化，创建新的handler处理中间任务</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214144422111.png" alt="image-20250214144422111"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214144336319.png" alt="image-20250214144336319"></p>
+<p><strong>handler执行中如何切换</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214145512894.png" alt="image-20250214145512894"></p>
+<h3 id="Channel-1"><a href="#Channel-1" class="headerlink" title="Channel"></a>Channel</h3><p><strong>channel的主要作用</strong></p>
+<ul>
+<li>close()可以用来关闭channel</li>
+<li>closeFuture()用来处理channel的关闭<ul>
+<li>sync()方法用来同步等待channel关闭</li>
+<li>addListener()方法用来异步等待channel关闭</li>
+</ul>
+</li>
+<li>pipeline()方法添加处理器</li>
+<li>write()方法将数据写入</li>
+<li>writeAndFlush()方法用来将数据写入并刷出</li>
+</ul>
+<h4 id="ChannelFuture"><a href="#ChannelFuture" class="headerlink" title="ChannelFuture"></a>ChannelFuture</h4><p><strong>改写之前客户端代码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214150321699.png" alt="image-20250214150321699"></p>
+<ul>
+<li>connect()方法是异步非阻塞的方法，如果不调用sync()进行阻塞，就会得到未完全创建的channel，从而导致发送数据失败</li>
+<li>sync方法是主线程调用NIOEventLoop处理，最后由主线程接收结果</li>
+<li>也可以调用addListener(回调对象)方法异步处理结果，此时处理和接收结果的是两个不同的NIOEventLoop</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214153828350.png" alt="image-20250214153828350"></p>
+<ul>
+<li>接下处理客户端的关闭，并且在合适位置添加代码，改写原客户端代码片段如下</li>
+<li>获取closeFuture对象，这个也是可以写成sync()方法的形式，也可以使用addListener()的形式</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214155015590.png" alt="image-20250214155015590"></p>
+<ul>
+<li>但是我们发现在执行完上述代码后，虽然主进程也结束了，但是整个java程序还没有完全结束，这是应为EventLoopGroup中还存在一些其它线程，导致整个进程还存在</li>
+</ul>
+<h4 id="Netty使用多线程的优点"><a href="#Netty使用多线程的优点" class="headerlink" title="Netty使用多线程的优点"></a>Netty使用多线程的优点</h4><ul>
+<li>单线程仅异步不能提高效率，必须配合多线程，多核CPU才能发挥异步的优势</li>
+<li>异步并没有缩短响应时间，反而有所增加（线程切换）</li>
+<li>合理进行任务拆分，也是利用异步的关键</li>
+<li>提升的主要是吞吐量（流水线）</li>
+</ul>
+<h3 id="Future-Promise"><a href="#Future-Promise" class="headerlink" title="Future &amp; Promise"></a>Future &amp; Promise</h3><p>异步处理常用的接口</p>
+<p>Netty中的Future与JDK中的Future同名，但是两个接口，netty的Future继承自JDK的Future，而Promise又对Netty Future进行扩展</p>
+<ul>
+<li>JDK Future只能同步等待任务结束（成功&#x2F;失败），才能得到结果</li>
+<li>Netty Future可以同步等待任务结束后得到结果，也可以异步方式得到结果，但都要等任务结束</li>
+<li>Netty Promise不仅要有Netty Future的功能，而且脱离了任务独立存在，只作为两个线程间传递结果的容器</li>
+</ul>
+<p><strong>重要方法</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214163022485.png" alt="image-20250214163022485"></p>
+<p><strong>实例代码分析</strong></p>
+<ul>
+<li>JDK Future</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214163540433.png" alt="image-20250214163540433"></p>
+<ul>
+<li>Netty Future</li>
+</ul>
+<p>分为同步和异步两种方式</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214170220441.png" alt="image-20250214170220441"></p>
+<ul>
+<li>Netty Promise</li>
+</ul>
+<p>Future需要提交一个任务得到返回值才能得到，而Promise可以自行创建</p>
+<p>对开发某些RPC框架作用很大</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214175705074.png" alt="image-20250214175705074"></p>
+<h3 id="Handler-Pipeline"><a href="#Handler-Pipeline" class="headerlink" title="Handler &amp; Pipeline"></a>Handler &amp; Pipeline</h3><p>ChannelHandler用来处理Channel上的各种事件</p>
+<ul>
+<li>ChannelInboundHandlerAdapter：其子类为入站处理器，主要用来读取客户端数据，写回结果</li>
+<li>ChannelOutboundHandlerAdapter：其子类为出站处理器，主要用来对写回结果进行加工</li>
+</ul>
+<p>ChannelPipeline的实现是一个ChannelHandlerContext（包装了ChannelHandler）组成的双向链表</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214183042698.png" alt="image-20250214183042698"></p>
+<h4 id="handler调用顺序"><a href="#handler调用顺序" class="headerlink" title="handler调用顺序"></a><strong>handler调用顺序</strong></h4><ul>
+<li>从头开始向后依次调用入站处理器<ul>
+<li>调用channelRead()方法或者fireChannelRead()方法，否则会导致断链</li>
+</ul>
+</li>
+<li>从尾开始向前依次调用出站处理器</li>
+<li>只有调用writeAndFlush()才会触发出站处理器<ul>
+<li>如果调用的主体是ChannelHandlerContext，就会从当前handler向前遍历寻找出站处理器执行</li>
+<li>如果调用的主体是NioSocketChannel，就会从尾处理器向前遍历寻找出站处理器执行</li>
+</ul>
+</li>
+</ul>
+<h4 id="EmbeddedChannel"><a href="#EmbeddedChannel" class="headerlink" title="EmbeddedChannel"></a><strong>EmbeddedChannel</strong></h4><p>用来测试的Channel，可以在不启动客户端的情况下模拟服务端的执行</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214183413025.png" alt="image-20250214183413025"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214183438191.png" alt="image-20250214183438191"></p>
+<h3 id="ByteBuf"><a href="#ByteBuf" class="headerlink" title="ByteBuf"></a>ByteBuf</h3><p>对字节数据的封装</p>
+<h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个默认的ByteBuf（池化基于直接内存的ByteBuf），初始容量为10</span></span><br><span class="line"><span class="type">ByteBuf</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBufAllocator.DEFAULT.buffer(<span class="number">10</span>);</span><br><span class="line">log(buffer);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调试用的log源码</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214183910388.png" alt="image-20250214183910388"></p>
+<h4 id="直接内存-vs-堆内存"><a href="#直接内存-vs-堆内存" class="headerlink" title="直接内存 vs 堆内存"></a>直接内存 vs 堆内存</h4><p>Netty默认使用直接内存</p>
+<ul>
+<li>创建池化基于堆的ByteBuf</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ByteBuf</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBufAllocator.DEFAULT.heapBuffer(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建池化基于直接内存的ByteBuf</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ByteBuf</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBufAllocator.DEFAULT.directBuffer(<span class="number">10</span>);</span><br><span class="line"><span class="comment">//或者直接调用buffer()</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>对比</strong></p>
+<ul>
+<li>直接内存创建和销毁的代价昂贵，但读写性能高（少一次内存复制），适合配合池化功能一起使用</li>
+<li>直接内存对GC压力小，这部分内存不受JVM垃圾回收的管理，但也要注意及时主动释放</li>
+</ul>
+<h4 id="池化-vs-非池化"><a href="#池化-vs-非池化" class="headerlink" title="池化 vs 非池化"></a>池化 vs 非池化</h4><p>池化的最大意义在于可以重用ByteBuf</p>
+<p><strong>池化优点</strong></p>
+<ul>
+<li>不进行池化，每次都要创建新的ByteBuf实例，这个操作对直接内存代价昂贵，即使堆内存，也会增加GC压力</li>
+<li>进行池化，可以重用池中ByteBuf实例，且采用与jemalloc类似的内存分配算法提升分配效率</li>
+<li>高并发时，池化功能更节约内存，减少内存溢出可能</li>
+</ul>
+<p>池化是否开启，可以设置系统环境变量（虚拟机参数也可以）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Dio.netty.allocator.type=&#123;unpooled|pooled&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>4.1以后，非安卓平台默认启用池化实现，安卓平台启用非池化实现</li>
+<li>4.1之前，池化功能还不成熟，默认是非池化实现</li>
+</ul>
+<h4 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h4><p>四部分组成</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214185943885.png" alt="image-20250214185943885"></p>
+<p>ByteBuffer使用两个指针分别代表读和写，不用像Buffer那样还要进行flip()操作，最开始读写指针都在0位置</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214190741176.png" alt="image-20250214190741176"></p>
+<p>从左到右分别为不可读，可读，可写，可扩容</p>
+<h4 id="写入"><a href="#写入" class="headerlink" title="写入"></a>写入</h4><p><strong>相关API</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214191055054.png" alt="image-20250214191055054"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214191123896.png" alt="image-20250214191123896"></p>
+<ul>
+<li>CharSequence是StringBuilder，StringBuffer的父类</li>
+<li>这些方法中未指明返回值的，返回值都是ByteBuf，意味着可以链式调用</li>
+<li>网络传输，默认习惯都是Big Endian</li>
+</ul>
+<h4 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h4><p><strong>扩容规则</strong></p>
+<ul>
+<li>若写入后数据大小未超过512，则选择下一个16的整数倍</li>
+<li>若写入后数据大小超过512，则选择下一个2^n</li>
+<li>扩容不能超过max capacity，会报错</li>
+</ul>
+<h4 id="读取"><a href="#读取" class="headerlink" title="读取"></a>读取</h4><ul>
+<li>读取一个字节，并且移动读指针，还有一些读取某个类型数据的读取方法</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">buffer.readByte();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>记录读指针位置以及重置读指针</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">buffer.markReaderInder();</span><br><span class="line">buffer.resetReaderIndex();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>不改变读指针的读取方法即采用get开头的一系列方法</li>
+</ul>
+<h4 id="retain-release"><a href="#retain-release" class="headerlink" title="retain &amp; release"></a>retain &amp; release</h4><p>由于Netty中由堆外内存的ByteBuf实现，堆外内存最好手动回收，而非等待GC垃圾回收</p>
+<ul>
+<li>UnpooledHeapByteBuf使用的是JVM内存，只需等待GC回收内存</li>
+<li>UnpooledDirectByteBuf使用的是直接内存，需要特殊方法进行回收</li>
+<li>PooledByteBuf和其子类使用池化机制，需要更复杂的规则回收内存</li>
+</ul>
+<p><code>回收内存的源码实现，关注下面方法的不同实现</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">deallocate</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Netty此处采用引用计数法进行控制回收内存，每个ByteBuf都实现ReferenceCounted接口</p>
+<ul>
+<li>每个ByteBuf对象的初始计数为1</li>
+<li>调用release方法计数减1，若计数为0，ByteBuf内存被回收</li>
+<li>调用retain方法计数加1，表示调用者没用完之前，其它handler即使调用了release也不会造成回收</li>
+<li>当计数为0时，底层内存会被回收，此时即使ByteBuf对象还在，其各个方法均无法正常使用</li>
+</ul>
+<p><strong>release的负责者</strong></p>
+<p>基本规则是：谁是最后使用者，谁负责release，如果没有进行手动清理，到达head或tail handler的buffer将被release</p>
+<p><strong>头尾释放源码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214195923216.png" alt="image-20250214195923216"></p>
+<ul>
+<li>尾</li>
+<li>头<ul>
+<li>继承了inbound和outbound的handler，所以可以用来处理出站消息的收尾工作</li>
+</ul>
+</li>
+</ul>
+<h4 id="Slice"><a href="#Slice" class="headerlink" title="Slice"></a>Slice</h4><p>零拷贝的体现之一</p>
+<p>对原始ByteBuf进行切片或多个ByteBuf，切片之后的ByteBuf并没有发生内存复制，还是使用原始ByteBuf的内存</p>
+<p>切片后的ByteBuf维护独立的read，write指针</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214200119820.png" alt="image-20250214200119820"></p>
+<p><strong>示例代码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214200424690.png" alt="image-20250214200424690"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214201824063.png" alt="image-20250214201824063"></p>
+<ul>
+<li>无参slice从原始ByteBuf的read index到write index之间的内容进行切片</li>
+<li>切片后的max capacity被固定为这个区间的大小，故不能追加write，否则会报IndexOutOfBoundsException异常</li>
+<li>原始ByteBuf的read不影响slice，因为slice有独立的读写指针</li>
+<li>slice内容发生更改，原始ByteBuf也会受影响，因为底层都是同一块内存</li>
+</ul>
+<h4 id="duplicate"><a href="#duplicate" class="headerlink" title="duplicate"></a>duplicate</h4><p>零拷贝的体现之一，类似于截取了原始ByteBuf所有内容，且没有max capcity的限制，也是与原始ByteBuf使用同一块底层内存，且读写指针独立</p>
+<h4 id="copy"><a href="#copy" class="headerlink" title="copy"></a>copy</h4><p>将底层内存数据进行深拷贝，无论读写，都与原始ByteBuf无关</p>
+<h4 id="composite"><a href="#composite" class="headerlink" title="composite"></a>composite</h4><p>零拷贝的体现之一，类似于将多个ByteBuf的数据无需拷贝地组合成一个ByteBuf</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214211252329.png" alt="image-20250214211252329"></p>
+<h4 id="Unpooled"><a href="#Unpooled" class="headerlink" title="Unpooled"></a>Unpooled</h4><p>一个工具类，提供非池化的ByteBuf创建，组合，复制等操作</p>
+<p>此处仅介绍其与零拷贝相关的wrappedBuffer方法，可用来包装ByteBuf</p>
+<ul>
+<li>组装多个buf</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214211803333.png" alt="image-20250214211803333"></p>
+<ul>
+<li>组装多个Byte数组</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214211829454.png" alt="image-20250214211829454"></p>
+<p><strong>ByteBuf优势</strong></p>
+<ul>
+<li>池化：可以重用池中ByteBuf实例，更节约内存，减少内存溢出可能</li>
+<li>读写指针分离，无需像ByteBuffer一样切换读写模式</li>
+<li>可以自动扩容</li>
+<li>支持链式调用，使用流畅</li>
+<li>多处体现零拷贝，如slice，duplicate，CompositeByteBuf</li>
+</ul>
+<h2 id="双向通信"><a href="#双向通信" class="headerlink" title="双向通信"></a>双向通信</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">可以看下视频，没什么内容</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h1 id="Netty进阶"><a href="#Netty进阶" class="headerlink" title="Netty进阶"></a>Netty进阶</h1><h2 id="粘包与半包"><a href="#粘包与半包" class="headerlink" title="粘包与半包"></a>粘包与半包</h2><p>本质是因为TCP是流式协议，消息无边界</p>
+<h3 id="粘包现象"><a href="#粘包现象" class="headerlink" title="粘包现象"></a>粘包现象</h3><ul>
+<li>发送abc和def，接收到abcdef</li>
+<li>原因<ul>
+<li>应用层：接收方ByteBuf设置太大（Netty默认1024）</li>
+<li>滑动窗口：假设发送方256bytes表示一个完整报文，但由于接收方处理不及时且窗口大小足够大，这些字节就会缓冲在接收方的滑动窗口中，滑动窗口中缓冲多个报文就会粘包</li>
+<li>Nagle算法：导致粘包</li>
+</ul>
+</li>
+<li>解决粘包的方法<ul>
+<li>定长分隔：发送固定长度的消息。这种方式简单但不够灵活。<br>消息头：在消息前加上消息长度的描述，接收方根据长度来确定消息的边界。</li>
+<li>特殊分隔符：在消息末尾加上特定的分隔符（如 \n 或其他特殊字符），接收方根据分隔符来判断消息的结束。</li>
+<li>心跳包：定期发送心跳包来同步发送方和接收方的状态，确保数据包的正确接收。</li>
+<li>协议定义：明确消息的格式和边界，例如使用特定的帧格式（如HTTP&#x2F;2、MQTT等）</li>
+</ul>
+</li>
+</ul>
+<h3 id="半包现象"><a href="#半包现象" class="headerlink" title="半包现象"></a>半包现象</h3><ul>
+<li>发送abcdef，接收到abc和def</li>
+<li>原因<ul>
+<li>应用层：接收方ByteBuf小于实际发送数据量</li>
+<li>滑动窗口：假设接收方窗口只剩128bytes，发送方报文大小是256bytes，此时放不下，只能先发送前128bytes，等待ACK后才能发送剩余部分，导致半包</li>
+<li>MSS限制，发送数据大小大于MSS限制需要切片发送，造成半包</li>
+</ul>
+</li>
+<li>解决半包的方法<ul>
+<li>消息头：类似于解决粘包的方法，通过消息头来确定消息的长度，从而判断是否接收到完整的消息。</li>
+<li>重发机制：如果接收方发现消息不完整，可以请求发送方重新发送缺失的部分。</li>
+<li>累积接收：接收方可以累积接收到的数据，直到接收到完整的消息为止。</li>
+<li>超时机制：设置合理的超时时间，如果在超时时间内未能接收到完整的消息，则可以判定消息丢失或不完整。</li>
+</ul>
+</li>
+</ul>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><h4 id="短链接"><a href="#短链接" class="headerlink" title="短链接"></a><strong>短链接</strong></h4><p>发送一个包后断开连接，等待下一次发送再重新建立连接，使得连接建立到连接断开为消息的边界，缺点是效率太低</p>
+<ul>
+<li>可以解决粘包的问题</li>
+<li>但是不能解决半包问题，接收方的缓冲区大小是有限的</li>
+</ul>
+<p><strong>示例代码</strong></p>
+<ul>
+<li>服务器端</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  1.短链接解决粘包与半包</span></span><br><span class="line"><span class="comment"> *  半包用这种办法还是不好解决，因为当接收方的缓冲区大小有限时，还是会出现</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldServer</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(HelloWorldServer.class);</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">boss</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>(<span class="number">1</span>);</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">worker</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">ServerBootstrap</span> <span class="variable">serverBootstrap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerBootstrap</span>();</span><br><span class="line">            serverBootstrap.channel(NioServerSocketChannel.class);</span><br><span class="line">            <span class="comment">// 调整系统的接受缓冲区(滑动窗口)</span></span><br><span class="line"><span class="comment">//            serverBootstrap.option(ChannelOption.SO_RCVBUF,10);</span></span><br><span class="line">            <span class="comment">// 调整netty的接受缓冲区(ByteBuf)</span></span><br><span class="line">            <span class="comment">//让缓冲区小于客户端发送的数据，从而出现半包问题</span></span><br><span class="line">            serverBootstrap.childOption(ChannelOption.RCVBUF_ALLOCATOR,<span class="keyword">new</span> <span class="title class_">AdaptiveRecvByteBufAllocator</span>(<span class="number">16</span>,<span class="number">16</span>,<span class="number">16</span>));</span><br><span class="line">            serverBootstrap.group(boss, worker);</span><br><span class="line">            serverBootstrap.childHandler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(LogLevel.DEBUG));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">channelFuture</span> <span class="operator">=</span> serverBootstrap.bind(<span class="number">8080</span>).sync();</span><br><span class="line">            log.debug(<span class="string">&quot;&#123;&#125; bound...&quot;</span>, channelFuture.channel());</span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;server error&quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            boss.shutdownGracefully();</span><br><span class="line">            worker.shutdownGracefully();</span><br><span class="line">            log.debug(<span class="string">&quot;stoped&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">HelloWorldServer</span>().start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>客户端</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloWorldClient</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(HelloWorldClient.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 分 10 次发送</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            send();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">worker</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Bootstrap</span> <span class="variable">bootstrap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Bootstrap</span>();</span><br><span class="line">            bootstrap.channel(NioSocketChannel.class);</span><br><span class="line">            bootstrap.group(worker);</span><br><span class="line">            bootstrap.handler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                    log.debug(<span class="string">&quot;conneted...&quot;</span>);</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(LogLevel.DEBUG));</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">ChannelInboundHandlerAdapter</span>() &#123;</span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                            log.debug(<span class="string">&quot;sending...&quot;</span>);</span><br><span class="line">                            <span class="type">ByteBuf</span> <span class="variable">buffer</span> <span class="operator">=</span> ctx.alloc().buffer();</span><br><span class="line"><span class="comment">//                            buffer.writeBytes(new byte[]&#123;0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15&#125;);</span></span><br><span class="line">                            buffer.writeBytes(<span class="keyword">new</span> <span class="title class_">byte</span>[]&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>&#125;);</span><br><span class="line">                            ctx.writeAndFlush(buffer);</span><br><span class="line">                            <span class="comment">// 发完即关</span></span><br><span class="line">                            ctx.close();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">channelFuture</span> <span class="operator">=</span> bootstrap.connect(<span class="string">&quot;localhost&quot;</span>, <span class="number">8080</span>).sync();</span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;client error&quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">//关闭NioEventLoopGroup线程</span></span><br><span class="line">            worker.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="定长解码器"><a href="#定长解码器" class="headerlink" title="定长解码器"></a><strong>定长解码器</strong></h4><p>使得所有数据包长度固定</p>
+<ul>
+<li>可以解决粘包和半包</li>
+<li>会导致网络资源的浪费</li>
+</ul>
+<p><strong>示例代码</strong></p>
+<ul>
+<li>服务器端</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Server2</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">boss</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">worker</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">ServerBootstrap</span> <span class="variable">serverBootstrap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerBootstrap</span>();</span><br><span class="line">            serverBootstrap.channel(NioServerSocketChannel.class);</span><br><span class="line">            <span class="comment">// 调整系统的接收缓冲区（滑动窗口）</span></span><br><span class="line"><span class="comment">//            serverBootstrap.option(ChannelOption.SO_RCVBUF, 10);</span></span><br><span class="line">            <span class="comment">// 调整 netty 的接收缓冲区（byteBuf）</span></span><br><span class="line">            serverBootstrap.childOption(ChannelOption.RCVBUF_ALLOCATOR, <span class="keyword">new</span> <span class="title class_">AdaptiveRecvByteBufAllocator</span>(<span class="number">16</span>, <span class="number">16</span>, <span class="number">16</span>));</span><br><span class="line">            serverBootstrap.group(boss, worker);</span><br><span class="line">            serverBootstrap.childHandler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                    <span class="comment">//先定长在打印日志</span></span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">FixedLengthFrameDecoder</span>(<span class="number">10</span>));</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(LogLevel.DEBUG));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">channelFuture</span> <span class="operator">=</span> serverBootstrap.bind(<span class="number">8080</span>).sync();</span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;server error&quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            boss.shutdownGracefully();</span><br><span class="line">            worker.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Server2</span>().start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>客户端</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Client2</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(Client1.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        send();</span><br><span class="line">        System.out.println(<span class="string">&quot;finish&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">byte</span>[] fill10Bytes(<span class="type">char</span> c, <span class="type">int</span> len) &#123;</span><br><span class="line">        <span class="type">byte</span>[] bytes = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">10</span>];</span><br><span class="line">        Arrays.fill(bytes, (<span class="type">byte</span>) <span class="string">&#x27;_&#x27;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            bytes[i] = (<span class="type">byte</span>) c;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="keyword">new</span> <span class="title class_">String</span>(bytes));</span><br><span class="line">        <span class="keyword">return</span> bytes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">worker</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Bootstrap</span> <span class="variable">bootstrap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Bootstrap</span>();</span><br><span class="line">            bootstrap.channel(NioSocketChannel.class);</span><br><span class="line">            bootstrap.group(worker);</span><br><span class="line">            bootstrap.handler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span> &#123;</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(LogLevel.DEBUG));</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">ChannelInboundHandlerAdapter</span>() &#123;</span><br><span class="line">                        <span class="comment">// 会在连接 channel 建立成功后，会触发 active 事件</span></span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> &#123;</span><br><span class="line">                            <span class="type">ByteBuf</span> <span class="variable">buf</span> <span class="operator">=</span> ctx.alloc().buffer();</span><br><span class="line">                            <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                            <span class="type">Random</span> <span class="variable">r</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">                            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">                                <span class="comment">//返回10字节的数据</span></span><br><span class="line">                                <span class="type">byte</span>[] bytes = fill10Bytes(c, r.nextInt(<span class="number">10</span>) + <span class="number">1</span>);</span><br><span class="line">                                c++;</span><br><span class="line">                                buf.writeBytes(bytes);</span><br><span class="line">                            &#125;</span><br><span class="line">                            ctx.writeAndFlush(buf);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">channelFuture</span> <span class="operator">=</span> bootstrap.connect(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">8080</span>).sync();</span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;client error&quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            worker.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h4 id="行解码器"><a href="#行解码器" class="headerlink" title="行解码器"></a><strong>行解码器</strong></h4><p>服务端加入，默认以 \n 或 \r\n 作为分隔符，如果超出指定长度仍未出现分隔符，则抛出异常</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214232423043.png" alt="image-20250214232423043"></p>
+<p><strong>示例代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Server3</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">boss</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">worker</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">ServerBootstrap</span> <span class="variable">serverBootstrap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerBootstrap</span>();</span><br><span class="line">            serverBootstrap.channel(NioServerSocketChannel.class);</span><br><span class="line">            <span class="comment">// 调整系统的接收缓冲区（滑动窗口）</span></span><br><span class="line"><span class="comment">//            serverBootstrap.option(ChannelOption.SO_RCVBUF, 10);</span></span><br><span class="line">            <span class="comment">// 调整 netty 的接收缓冲区（byteBuf）</span></span><br><span class="line">            serverBootstrap.childOption(ChannelOption.RCVBUF_ALLOCATOR, <span class="keyword">new</span> <span class="title class_">AdaptiveRecvByteBufAllocator</span>(<span class="number">16</span>, <span class="number">16</span>, <span class="number">16</span>));</span><br><span class="line">            serverBootstrap.group(boss, worker);</span><br><span class="line">            serverBootstrap.childHandler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                    <span class="comment">//\n和\r\n分隔符</span></span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LineBasedFrameDecoder</span>(<span class="number">1024</span>));</span><br><span class="line">                    <span class="comment">//自定义分割符</span></span><br><span class="line">                    <span class="comment">//DelimiterBasedFrameDecoder(int maxFrameLength, ByteBuf delimiter)</span></span><br><span class="line"><span class="comment">//                    ch.pipeline().addLast(new DelimiterBasedFrameDecoder(int maxFrameLength, ByteBuf delimiter));</span></span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(LogLevel.DEBUG));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">channelFuture</span> <span class="operator">=</span> serverBootstrap.bind(<span class="number">8080</span>).sync();</span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;server error&quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            boss.shutdownGracefully();</span><br><span class="line">            worker.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Server3</span>().start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>客户端</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Client3</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">log</span> <span class="operator">=</span> LoggerFactory.getLogger(Client1.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        send();</span><br><span class="line">        System.out.println(<span class="string">&quot;finish&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> StringBuilder <span class="title function_">makeString</span><span class="params">(<span class="type">char</span> c, <span class="type">int</span> len)</span> &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(len + <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">            sb.append(c);</span><br><span class="line">        &#125;</span><br><span class="line">        sb.append(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> sb;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">worker</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Bootstrap</span> <span class="variable">bootstrap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Bootstrap</span>();</span><br><span class="line">            bootstrap.channel(NioSocketChannel.class);</span><br><span class="line">            bootstrap.group(worker);</span><br><span class="line">            bootstrap.handler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span> &#123;</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(LogLevel.DEBUG));</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">ChannelInboundHandlerAdapter</span>() &#123;</span><br><span class="line">                        <span class="comment">// 会在连接 channel 建立成功后，会触发 active 事件</span></span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> &#123;</span><br><span class="line">                            <span class="type">ByteBuf</span> <span class="variable">buf</span> <span class="operator">=</span> ctx.alloc().buffer();</span><br><span class="line">                            <span class="type">char</span> <span class="variable">c</span> <span class="operator">=</span> <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                            <span class="type">Random</span> <span class="variable">r</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line">                            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">                                <span class="comment">//随时生成1-257长度的字节，并以&quot;\n&quot;结尾</span></span><br><span class="line">                                <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> makeString(c, r.nextInt(<span class="number">256</span>) + <span class="number">1</span>);</span><br><span class="line">                                c++;</span><br><span class="line">                                buf.writeBytes(sb.toString().getBytes());</span><br><span class="line">                            &#125;</span><br><span class="line">                            ctx.writeAndFlush(buf);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">channelFuture</span> <span class="operator">=</span> bootstrap.connect(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">8080</span>).sync();</span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;client error&quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            worker.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="LTC解码器"><a href="#LTC解码器" class="headerlink" title="LTC解码器"></a><strong>LTC解码器</strong></h4><p>在发送消息前，先约定用定长字节表示接下来数据的长度</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">LengthFieldBasedFrameDecoder</span><span class="params">(</span></span><br><span class="line"><span class="params">         // 真实的最大长度，超过该长度还没有发现分割标准则为失败</span></span><br><span class="line"><span class="params">        <span class="type">int</span> maxFrameLength,</span></span><br><span class="line"><span class="params">        // 长度字段偏移量</span></span><br><span class="line"><span class="params">        // 开始读取时的位置(从哪开始读)</span></span><br><span class="line">        <span class="type">int</span> lengthFieldOffset, </span><br><span class="line">        <span class="comment">// 长度字段长度(让服务器知道一条完整的消息的长度)</span></span><br><span class="line">        <span class="comment">// 负责记录消息所发送消息的长度(不是记录整个消息的长度)</span></span><br><span class="line">        <span class="type">int</span> lengthFieldLength,</span><br><span class="line">        <span class="comment">// 长度字段为基准，还有几个字节是内容</span></span><br><span class="line">        <span class="comment">// 读完长度字段后，跳过几个字节</span></span><br><span class="line">        <span class="type">int</span> lengthAdjustment, </span><br><span class="line">        <span class="comment">// 从头剥离几个字节</span></span><br><span class="line">        <span class="comment">// 从头开始放弃几个字节</span></span><br><span class="line">        <span class="type">int</span> initialBytesToStrip)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>示例代码</strong></p>
+<p>使用EmbeddedChannel ，无需客户端</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestLengthFieldDecoder</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">EmbeddedChannel</span> <span class="variable">channel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">EmbeddedChannel</span>(</span><br><span class="line"><span class="comment">//                new LengthFieldBasedFrameDecoder(</span></span><br><span class="line"><span class="comment">//                        1024, 0, 4, 0,0),</span></span><br><span class="line"><span class="comment">//                new LengthFieldBasedFrameDecoder(</span></span><br><span class="line"><span class="comment">//                        1024, 0, 4, 0,4),</span></span><br><span class="line">                <span class="comment">//设置消息最大为1024，长度从0开始，长度存储占有了4个字节，跳过1个字节，将前五个字节去掉(跳过长度存储的位置和额外加的字节位置)</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">LengthFieldBasedFrameDecoder</span>(</span><br><span class="line">                        <span class="number">1024</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">1</span>,<span class="number">5</span>),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(LogLevel.DEBUG)</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="comment">//  4 个字节的内容长度， 实际内容</span></span><br><span class="line">        <span class="type">ByteBuf</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBufAllocator.DEFAULT.buffer();</span><br><span class="line">        send(buffer, <span class="string">&quot;Hello, world&quot;</span>);</span><br><span class="line">        send(buffer, <span class="string">&quot;Hi!&quot;</span>);</span><br><span class="line">        <span class="comment">//写入channel，模拟客户端发送</span></span><br><span class="line">        channel.writeInbound(buffer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">(ByteBuf buffer, String content)</span> &#123;</span><br><span class="line">        <span class="type">byte</span>[] bytes = content.getBytes(); <span class="comment">// 实际内容</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> bytes.length; <span class="comment">// 实际内容长度</span></span><br><span class="line">        buffer.writeInt(length);<span class="comment">//writeInt为4个字节，并且为大端表示法</span></span><br><span class="line">        buffer.writeByte(<span class="number">1</span>);<span class="comment">//注意可能出现TooLongFrameException: Adjusted frame length exceeds 1024: 1677721604 - discarded</span></span><br><span class="line">        <span class="comment">//因为writeInt()中设置了长度，但是这里又多了一个字节，就会导致读消息体时漏掉一个字节，</span></span><br><span class="line">        <span class="comment">// 消息体剩下的那个字节会被当成存储的的消息长度，因此报错。</span></span><br><span class="line"></span><br><span class="line">        buffer.writeBytes(bytes);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="协议设计与解析"><a href="#协议设计与解析" class="headerlink" title="协议设计与解析"></a>协议设计与解析</h2><h3 id="redis示例"><a href="#redis示例" class="headerlink" title="redis示例"></a>redis示例</h3><p>在redis中执行set name操作。使用redis的resp协议</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test01Redis</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">byte</span>[] LINE = &#123;<span class="number">13</span>, <span class="number">10</span>&#125;;<span class="comment">//13.回车 10.换行</span></span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">worker</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Bootstrap</span> <span class="variable">bootstrap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Bootstrap</span>();</span><br><span class="line">            bootstrap.channel(NioSocketChannel.class);</span><br><span class="line">            bootstrap.group(worker);</span><br><span class="line">            bootstrap.handler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span> &#123;</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>());</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">ChannelInboundHandlerAdapter</span>() &#123;</span><br><span class="line">                        <span class="comment">//channelActive：连接建立发送命令</span></span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> &#123;</span><br><span class="line">                            <span class="type">ByteBuf</span> <span class="variable">buf</span> <span class="operator">=</span> ctx.alloc().buffer();</span><br><span class="line">                            buf.writeBytes(<span class="string">&quot;*3&quot;</span>.getBytes());</span><br><span class="line">                            buf.writeBytes(LINE);<span class="comment">//LINE：回车换行</span></span><br><span class="line">                            buf.writeBytes(<span class="string">&quot;$3&quot;</span>.getBytes());</span><br><span class="line">                            buf.writeBytes(LINE);</span><br><span class="line">                            buf.writeBytes(<span class="string">&quot;set&quot;</span>.getBytes());</span><br><span class="line">                            buf.writeBytes(LINE);</span><br><span class="line">                            buf.writeBytes(<span class="string">&quot;$4&quot;</span>.getBytes());</span><br><span class="line">                            buf.writeBytes(LINE);</span><br><span class="line">                            buf.writeBytes(<span class="string">&quot;name&quot;</span>.getBytes());</span><br><span class="line">                            buf.writeBytes(LINE);</span><br><span class="line">                            buf.writeBytes(<span class="string">&quot;$8&quot;</span>.getBytes());</span><br><span class="line">                            buf.writeBytes(LINE);</span><br><span class="line">                            buf.writeBytes(<span class="string">&quot;zhangsan&quot;</span>.getBytes());</span><br><span class="line">                            buf.writeBytes(LINE);</span><br><span class="line">                            ctx.writeAndFlush(buf);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="comment">//接受redis返回的消息</span></span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                            <span class="type">ByteBuf</span> <span class="variable">buf</span> <span class="operator">=</span> (ByteBuf) msg;</span><br><span class="line">                            System.out.println(<span class="string">&quot;channelRead&quot;</span>);</span><br><span class="line">                            System.out.println(buf.toString(Charset.defaultCharset()));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">channelFuture</span> <span class="operator">=</span> bootstrap.connect(<span class="string">&quot;localhost&quot;</span>, <span class="number">6379</span>).sync();</span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;client error&quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            worker.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="HTTP示例"><a href="#HTTP示例" class="headerlink" title="HTTP示例"></a>HTTP示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test02Http</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">boss</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">worker</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">ServerBootstrap</span> <span class="variable">serverBootstrap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerBootstrap</span>();</span><br><span class="line">            serverBootstrap.channel(NioServerSocketChannel.class);</span><br><span class="line">            serverBootstrap.group(boss, worker);</span><br><span class="line">            serverBootstrap.childHandler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(LogLevel.DEBUG));</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">HttpServerCodec</span>());</span><br><span class="line"><span class="comment">//                    ch.pipeline().addLast(new ChannelInboundHandlerAdapter() &#123;</span></span><br><span class="line"><span class="comment">//                        @Override</span></span><br><span class="line"><span class="comment">//                        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception &#123;</span></span><br><span class="line"><span class="comment">//                            log.debug(&quot;&#123;&#125;&quot;, msg.getClass());</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//                            if (msg instanceof HttpRequest) &#123; // 请求行，请求头</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//                            &#125; else if (msg instanceof HttpContent) &#123; //请求体</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//                            &#125;</span></span><br><span class="line"><span class="comment">//                        &#125;</span></span><br><span class="line"><span class="comment">//                    &#125;);</span></span><br><span class="line">                    <span class="comment">//现在只处理HttpRequest类型的消息(选择处理)，HttpContent这里会选择跳过</span></span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">SimpleChannelInboundHandler</span>&lt;HttpRequest&gt;() &#123;</span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">channelRead0</span><span class="params">(ChannelHandlerContext ctx, HttpRequest msg)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                            <span class="comment">// 获取请求</span></span><br><span class="line">                            log.debug(msg.uri());</span><br><span class="line"></span><br><span class="line">                            <span class="comment">// 返回响应</span></span><br><span class="line">                            <span class="type">DefaultFullHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span></span><br><span class="line">                                    <span class="keyword">new</span> <span class="title class_">DefaultFullHttpResponse</span>(msg.protocolVersion(), HttpResponseStatus.OK);</span><br><span class="line"></span><br><span class="line">                            <span class="type">byte</span>[] bytes = <span class="string">&quot;&lt;h1&gt;Hello, world!&lt;/h1&gt;&quot;</span>.getBytes();</span><br><span class="line">                            <span class="comment">//设置响应体长度</span></span><br><span class="line">                            response.headers().setInt(CONTENT_LENGTH, bytes.length);</span><br><span class="line">                            response.content().writeBytes(bytes);</span><br><span class="line"></span><br><span class="line">                            <span class="comment">// 写回响应</span></span><br><span class="line">                            ctx.writeAndFlush(response);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">channelFuture</span> <span class="operator">=</span> serverBootstrap.bind(<span class="number">8080</span>).sync();</span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;server error&quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            boss.shutdownGracefully();</span><br><span class="line">            worker.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>HttpServerCodec</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215130746416.png" alt="image-20250215130746416"></p>
+<ul>
+<li>报文的解析结果分为两个类</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215130936561.png" alt="image-20250215130936561"></p>
+<ul>
+<li><p>SimpleChannelInboundHandler，可以指定对哪个类感兴趣</p>
+</li>
+<li><p>指定报文内容长度是为了停止浏览器不断地等待，使之知道已经接收到了全部报文内容</p>
+</li>
+</ul>
+<h3 id="自定义"><a href="#自定义" class="headerlink" title="自定义"></a>自定义</h3><p><strong>自定义协议要素</strong></p>
+<ul>
+<li>魔数：用来判定是否是无效数据包</li>
+<li>版本号：支持协议地升级</li>
+<li>序列化算法：消息正文到底采用哪种序列化反序列化方式，且由此扩展，如json，protobuf，hessian，jdk</li>
+<li>指令类型，与业务相关</li>
+<li>请求序号：为双工通信，提供业务能力</li>
+<li>正文长度</li>
+<li>消息正文：使用json，xml，对象流等形式</li>
+</ul>
+<p><strong>自定义聊天室源码解析</strong></p>
+<ul>
+<li>自定义的指令类型</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215135143229.png" alt="image-20250215135143229"></p>
+<ul>
+<li>编码<ul>
+<li>java中协议总长度最好是2的整数倍</li>
+</ul>
+</li>
+<li>解码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">decode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;执行MessageCodec.decode()&quot;</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">magicNum</span> <span class="operator">=</span> in.readInt();<span class="comment">//read会改变读指针，get只根据索引找</span></span><br><span class="line">        <span class="type">byte</span> <span class="variable">version</span> <span class="operator">=</span> in.readByte();</span><br><span class="line">        <span class="type">byte</span> <span class="variable">serializerType</span> <span class="operator">=</span> in.readByte();<span class="comment">//字节的序列化方式</span></span><br><span class="line">        <span class="type">byte</span> <span class="variable">messageType</span> <span class="operator">=</span> in.readByte();</span><br><span class="line">        <span class="type">int</span> <span class="variable">sequenceId</span> <span class="operator">=</span> in.readInt();</span><br><span class="line">        in.readByte();<span class="comment">//对齐填充</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> in.readInt();<span class="comment">//长度</span></span><br><span class="line">        <span class="type">byte</span>[] bytes = <span class="keyword">new</span> <span class="title class_">byte</span>[length];</span><br><span class="line">        in.readBytes(bytes, <span class="number">0</span>, length);</span><br><span class="line">        <span class="keyword">if</span>(serializerType == <span class="number">0</span>)&#123;<span class="comment">//如果是jdk</span></span><br><span class="line">            <span class="type">ObjectInputStream</span> <span class="variable">ois</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(<span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(bytes));</span><br><span class="line">            <span class="type">Message</span> <span class="variable">message</span> <span class="operator">=</span> (Message) ois.readObject();</span><br><span class="line">            <span class="comment">//注意这里magicNum显示为16909060，因为十六进制的01020304转为是十进制，为16909060</span></span><br><span class="line">            log.debug(<span class="string">&quot;&#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;&quot;</span>, magicNum, version, serializerType, messageType, sequenceId, length);</span><br><span class="line">            log.debug(<span class="string">&quot;&#123;&#125;&quot;</span>, message);</span><br><span class="line">            out.add(message);<span class="comment">//netty约定需要将解码后的结果放到参数中，不然下一个header将无法拿到解码后的结果</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>处理半包问题<ul>
+<li>使用之前的LengthFieldBasedFrameDecoder处理</li>
+<li>要对s1进行一次retain，否则会出现</li>
+</ul>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215150926903.png" alt="image-20250215150926903"></p>
+<ul>
+<li>是否可以使得一个handler对象被多个channel共享，独立出一个LengthFieldBasedFrameDecoder解码器</li>
+<li>带有@Sharable注释的handler就是可以被共享的，无线程安全问题的handler，一般解码器都是不能共享的</li>
+<li>考察自己定义的类能不能加@Sharable注解</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215165139453.png" alt="image-20250215165139453"></p>
+<ul>
+<li>发现其父类ByteToMessageCodec被限制为不能被Sharable注解修饰，可以换成MessageToMessageCodec</li>
+</ul>
+<h2 id="网络编程中可能出现的问题"><a href="#网络编程中可能出现的问题" class="headerlink" title="网络编程中可能出现的问题"></a>网络编程中可能出现的问题</h2><h3 id="连接假死"><a href="#连接假死" class="headerlink" title="连接假死"></a>连接假死</h3><p><strong>原因</strong></p>
+<ul>
+<li>网络设备出现故障，应用程序没有感知到，仍占用资源</li>
+<li>公网网络不稳定，出现丢包，如果连续丢包，会出现客户端发不出信息，服务端也收不到数据</li>
+<li>应用程序线程阻塞，无法进行数据读写</li>
+</ul>
+<p><strong>问题</strong></p>
+<ul>
+<li>假死的连接占用的资源不能自动释放</li>
+<li>向假死的连接发送数据，得到的反馈是发送超时</li>
+</ul>
+<p>可以用IdleStateHandler来解决，用来判断是不是读空闲时间过长或写空闲时间过长</p>
+<p><strong>tips</strong></p>
+<ul>
+<li>ChannelDuplexHandle既可以作为入站也可以作为出站handler，用来触发特殊事件</li>
+</ul>
+<h1 id="优化和源码"><a href="#优化和源码" class="headerlink" title="优化和源码"></a>优化和源码</h1><h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><h3 id="扩展序列化算法"><a href="#扩展序列化算法" class="headerlink" title="扩展序列化算法"></a>扩展序列化算法</h3><p>序列化、反序列化主要用在消息正文的转换上</p>
+<ul>
+<li>序列化时：需要将java对象变为要传输的数据（可能是byte[]，或json等，最终都需要编程byte[]）</li>
+<li>反序列化时，需要将传入的正文数据还原成java对象，便于处理</li>
+</ul>
+<p><strong>java自带的序列化和反序列化核心机制代码</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215183153299.png" alt="image-20250215183153299"></p>
+<ul>
+<li>无需指定要反序列化成为的类，因为已经JDK序列化的对象已经包含了序列化类的信息。但是其它方式最好指明类</li>
+</ul>
+<p><strong>扩展序列化算法</strong></p>
+<p>config类，可以实现在配置文件中配置序列化算法的选择</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215184448883.png" alt="image-20250215184448883"></p>
+<p>根据enum扩展算法进行选择</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215184634693.png" alt="image-20250215184634693"></p>
+<ul>
+<li>JAVA流实现</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215184202755.png" alt="image-20250215184202755"></p>
+<ul>
+<li>json实现</li>
+</ul>
+<p>需要导入gson依赖</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215184322089.png" alt="image-20250215184322089"></p>
+<p>代码实现</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215184417721.png" alt="image-20250215184417721"></p>
+<p><strong>扩展后使用算法的源码改动</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215185004290.png" alt="image-20250215185004290"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215184909947.png" alt="image-20250215184909947"></p>
+<h3 id="参数调优"><a href="#参数调优" class="headerlink" title="参数调优"></a>参数调优</h3><h4 id="CONNECT-TIMEOUT-MILLIS"><a href="#CONNECT-TIMEOUT-MILLIS" class="headerlink" title="CONNECT_TIMEOUT_MILLIS"></a>CONNECT_TIMEOUT_MILLIS</h4><p>在Netty中，CONNECT_TIMEOUT_MILLIS 是一个与连接超时相关的配置选项。</p>
+<p>这个选项用于设置客户端在尝试建立连接时的最大等待时间。如果在指定的时间内未能成功建立连接，Netty 将会抛出一个 ConnectTimeoutException 异常。</p>
+<ul>
+<li>属于 SocketChannal 参数</li>
+<li>用在客户端建立连接时，如果在指定毫秒内无法连接，会抛出 timeout 异常</li>
+<li>SO_TIMEOUT 主要用在阻塞 IO，阻塞 IO 中 accept，read 等都是无限等待的，如果不希望永远阻塞，使用它调整超时时间</li>
+</ul>
+<p><strong>配置参数的方式</strong></p>
+<ul>
+<li>客户端通过 .option() 方法配置参数 给 SocketChannel 配置参数</li>
+</ul>
+<p>服务器端</p>
+<ul>
+<li>new ServerBootstrap().option() ，是给 ServerSocketChannel 配置参数</li>
+<li>new ServerBootstrap().childOption() ，给 SocketChannel 配置参数</li>
+</ul>
+<p><strong>示例代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> io.netty.bootstrap.Bootstrap;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.ChannelFuture;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.ChannelOption;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.nio.NioEventLoopGroup;</span><br><span class="line"><span class="keyword">import</span> io.netty.channel.socket.nio.NioSocketChannel;</span><br><span class="line"><span class="keyword">import</span> io.netty.handler.logging.LoggingHandler;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test02ConnectionTimeout</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">NioEventLoopGroup</span> <span class="variable">group</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Bootstrap</span> <span class="variable">bootstrap</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Bootstrap</span>()</span><br><span class="line">                    .group(group)</span><br><span class="line">                    .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, <span class="number">1000</span>)</span><br><span class="line">                    .channel(NioSocketChannel.class)</span><br><span class="line">                    .handler(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>());</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">future</span> <span class="operator">=</span> bootstrap.connect(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">8080</span>);</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">channelFuture</span> <span class="operator">=</span> future.sync();<span class="comment">//当1秒内没有连接成功，则判断为连接超时所以抛出异常</span></span><br><span class="line">            channelFuture.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            log.debug(<span class="string">&quot;timeout&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            group.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>注意事项</strong></p>
+<ul>
+<li>合理设置超时时间：根据应用场景和网络状况合理设置超时时间。如果网络条件较差，可以适当增加超时时间；如果对响应时间有严格要求，则可以缩短超时时间。</li>
+<li>异常处理：在代码中处理 ConnectTimeoutException，可以记录日志，并根据业务需求决定是否重试连接等。</li>
+<li>重试机制：可以实现一个重试机制，在首次连接失败后尝试多次连接，直到成功或达到最大重试次数。</li>
+<li>监控和报警：设置监控来检测连接超时的发生，并在必要时触发报警，以便及时处理潜在的问题。</li>
+</ul>
+<h4 id="SO-BACKLOG"><a href="#SO-BACKLOG" class="headerlink" title="SO_BACKLOG"></a>SO_BACKLOG</h4><ul>
+<li>在Netty中，SO_BACKLOG 是一个与 TCP 服务器端套接字相关的选项</li>
+<li>用于设置在服务器的连接请求队列中可以排队的最大连接数。</li>
+<li>当客户端尝试连接到服务器时，如果服务器正忙于处理其他连接请求，新的连接请求会被放入这个队列中等待处理。SO_BACKLOG 的值决定了这个队列的最大长度。</li>
+<li>Netty中SO_BACKLOG属于 ServerSocketChannal 参数</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215195558550.png" alt="image-20250215195558550"></p>
+<p>在 linux 2.2 之前，backlog 大小包括了两个队列的大小，在 2.2 之后，分别用下面两个参数来控制</p>
+<p><strong>sync queue - 半连接队列</strong></p>
+<ul>
+<li>大小通过 &#x2F;proc&#x2F;sys&#x2F;net&#x2F;ipv4&#x2F;tcp_max_syn_backlog 指定，在</li>
+<li>syncookies 启用的情况下，逻辑上没有最大值限制，这个设置便被忽略</li>
+</ul>
+<p><strong>accept queue - 全连接队列</strong></p>
+<p>来不及处理才会堆积到队列中</p>
+<ul>
+<li>其大小通过 &#x2F;proc&#x2F;sys&#x2F;net&#x2F;core&#x2F;somaxconn 指定，在使用 listen 函数时，内核会根据传入的 backlog 参数与系统参数，取二者的较小值</li>
+<li>如果 accpet queue 队列满了，server 将发送一个拒绝连接的错误信息到 client</li>
+</ul>
+<p>​	<code>bind(8080，backlog)</code></p>
+<p><strong>设置参数示例代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestBacklogServer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">ServerBootstrap</span>()</span><br><span class="line">                .group(<span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>())</span><br><span class="line">                .option(ChannelOption.SO_BACKLOG, <span class="number">2</span>)</span><br><span class="line">                <span class="comment">// 验证全队列满了，客户端在进行连接会报错ConnectException: Connection refused: no further information</span></span><br><span class="line">                .channel(NioServerSocketChannel.class)</span><br><span class="line">                .childHandler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;NioSocketChannel&gt;() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(NioSocketChannel ch)</span> &#123;</span><br><span class="line">                        ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;).bind(<span class="number">8080</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>注意事项</strong></p>
+<ul>
+<li>操作系统限制：SO_BACKLOG 的实际效果受到操作系统的限制。在 Linux 上，SO_BACKLOG 的值通常会被限制在 somaxconn 系统参数范围内。可以通过查看当前linux系统的 somaxconn 值，并通过 sysctl 命令进行调整。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">查看 somaxconn 的值</span><br><span class="line">cat /proc/sys/net/core/somaxconn</span><br><span class="line"></span><br><span class="line"># 设置somaxconn 的值</span><br><span class="line">sysctl net.core.somaxconn=1024</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>队列满后的处理：如果 SO_BACKLOG 队列满了，新的连接请求将会被拒绝。在这种情况下，客户端会收到一个连接失败的错误。因此，合理设置 SO_BACKLOG 的值很重要，以确保不会因为队列满而导致连接请求被拒绝。</li>
+<li>性能影响：虽然设置较高的 SO_BACKLOG 值可以容纳更多的连接请求，但也可能占用更多的系统资源。因此，需要根据实际的并发需求和系统性能来权衡 SO_BACKLOG 的值。</li>
+</ul>
+<h4 id="ulimit-n-文件描述符"><a href="#ulimit-n-文件描述符" class="headerlink" title="ulimit -n(文件描述符)"></a>ulimit -n(文件描述符)</h4><ul>
+<li><p>文件描述符是操作系统分配给进程用于表示打开的文件、网络连接等资源的整数标识符。在 Linux 和 Unix-like 系统中，每个进程都有一个文件描述符的上限，这个上限由 ulimit -n 命令来查看和设置。</p>
+</li>
+<li><p>文件描述符是操作系统用来跟踪进程所打开的文件和其他 I&#x2F;O 资源（如网络连接、管道等）的内部索引。每个打开的文件或 I&#x2F;O 资源都有一个唯一的文件描述符与之关联。</p>
+</li>
+<li><p>ulimit -n 属于操作系统参数</p>
+</li>
+<li><p>作用是显示一个线程同时打开最大文件描述符(FD)的数量，当FD到达上限在打开文件会报错。如果服务器要支持高并发，支持大量的连接就需要调整ulimit参数。</p>
+</li>
+</ul>
+<p><strong>注意事项</strong></p>
+<ul>
+<li>安全性：增加文件描述符限制可能会增加系统资源的消耗，因此需要根据实际需求和系统能力来设置合适的限制值。</li>
+<li>性能：增加文件描述符限制可能会导致系统开销增加，特别是在高并发场景下，因此需要权衡利弊。</li>
+<li>系统限制：有些系统对文件描述符的总数有严格的限制，即使你是 root 用户也无法无限制地增加文件描述符的数量。</li>
+</ul>
+<h4 id="TCP-NODELAY"><a href="#TCP-NODELAY" class="headerlink" title="TCP_NODELAY"></a>TCP_NODELAY</h4><ul>
+<li><p>在Netty中，TCP_NODELAY 是一个与TCP协议相关的选项，用于控制是否禁用Nagle算法。</p>
+</li>
+<li><p>Nagle算法是为了减少小数据包在网络中的传输次数，以减少网络带宽的消耗和网络拥塞。</p>
+</li>
+<li><p>然而，在某些需要低延迟的应用场景中，禁用Nagle算法可以提高实时性能。</p>
+</li>
+<li><p>TCP_NODELAY 属于 SocketChannal 参数</p>
+</li>
+<li><p>默认false开启了nagle算法(沾包问题数据攒到一起发送)，但是一般都需要消息可以及时的发送出去。所以设置为true</p>
+</li>
+</ul>
+<p><strong>场景</strong></p>
+<ul>
+<li>实时应用，在实时应用（如在线游戏、实时视频会议等）中，通常需要尽可能低的延迟。在这种情况下，禁用Nagle算法可以提高实时性能，因为数据包会立即发送，而不会被累积。</li>
+<li>高吞吐量应用，在需要高吞吐量的应用中，累积数据包可以减少网络带宽的消耗。因此，在这类应用中，可以保留Nagle算法的默认设置。</li>
+</ul>
+<p><strong>注意事项</strong></p>
+<ul>
+<li>性能影响：禁用Nagle算法会增加网络带宽的消耗，尤其是在发送小数据包的情况下。因此，在设置 TCP_NODELAY 之前，需要评估其对性能的影响。</li>
+<li>兼容性：确保客户端和服务器端都设置了相同的 TCP_NODELAY 值，以避免由于配置不一致而导致的问题。</li>
+</ul>
+<h4 id="SO-SNDBUF-SO-RCVBUF"><a href="#SO-SNDBUF-SO-RCVBUF" class="headerlink" title="SO_SNDBUF &amp; SO_RCVBUF"></a>SO_SNDBUF &amp; SO_RCVBUF</h4><ul>
+<li><p>在Netty中，SO_SNDBUF 和 SO_RCVBUF 是两个与套接字缓冲区相关的选项，它们分别用于控制发送缓冲区和接收缓冲区的大小。</p>
+</li>
+<li><p>这两个选项可以帮助优化网络通信性能，特别是在高并发或大数据量传输的场景下。</p>
+</li>
+<li><p>SO_SNDBUF 属于 SocketChannal 参数</p>
+<ul>
+<li>SO_SNDBUF 选项用于设置发送缓冲区的大小。</li>
+<li>发送缓冲区是操作系统用来暂时存储待发送的数据的一个区域。当应用程序向网络发送数据时，数据首先被写入发送缓冲区，然后由操作系统负责将数据发送到网络上。</li>
+<li>作用<ul>
+<li>提高发送速度：较大的发送缓冲区可以让应用程序更快地将数据写入缓冲区，而不必等待数据实际发送完毕。</li>
+<li>减少阻塞：如果发送缓冲区太小，当网络拥塞或接收方处理较慢时，应用程序可能会因为缓冲区满而被阻塞。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>SO_RCVBUF 既可用于 SocketChannal 参数，也可以用于 ServerSocketChannal 参数（建议设置到 ServerSocketChannal 上）</p>
+<ul>
+<li>SO_RCVBUF 选项用于设置接收缓冲区的大小。接收缓冲区是操作系统用来暂时存储从网络接收的数据的一个区域。当数据从网络到达时，首先被写入接收缓冲区，然后由应用程序负责从缓冲区中读取数据。</li>
+<li>作用<ul>
+<li>提高接收速度：较大的接收缓冲区可以让操作系统更快地接收数据，而不必等待应用程序处理完毕。</li>
+<li>减少丢包：如果接收缓冲区太小，当网络流量较大或应用程序处理较慢时，可能会导致数据包丢失</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>这两个参数决定了滑动窗口的上限。<strong>一般不建议手动添加，因为操作系统一般会根据通信双方的网络通信能力来调整这两个参数。</strong></p>
+</li>
+</ul>
+<h4 id="ALLOCATOR"><a href="#ALLOCATOR" class="headerlink" title="ALLOCATOR"></a>ALLOCATOR</h4><ul>
+<li>属于 SocketChannal 参数</li>
+<li>用来分配 ByteBuf， ctx.alloc()</li>
+<li>ByteBuf默认使用PooledUnsafeDirectByteBuf</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215205852400.png" alt="image-20250215205852400"></p>
+<h4 id="RCVBUF-ALLOCATOR"><a href="#RCVBUF-ALLOCATOR" class="headerlink" title="RCVBUF_ALLOCATOR"></a>RCVBUF_ALLOCATOR</h4><ul>
+<li><p>在Netty中，RCVBUF_ALLOCATOR 是一个与接收缓冲区大小相关的配置选项，它用于控制接收缓冲区的初始大小和最大大小。这个配置选项可以帮助优化网络通信性能，特别是在高并发或大数据量传输的场景下。</p>
+</li>
+<li><p>RCVBUF_ALLOCATOR 用于控制接收缓冲区的分配策略。接收缓冲区是操作系统用来暂时存储从网络接收的数据的一个区域。当数据从网络到达时，首先被写入接收缓冲区，然后由应用程序负责从缓冲区中读取数据。</p>
+</li>
+<li><p>属于 SocketChannal 参数</p>
+</li>
+<li><p>控制 netty 接收缓冲区大小</p>
+</li>
+<li><p>负责入站数据的分配，决定入站缓冲区的大小（并可动态调整），统一采用 direct 直接内存，具体池化还是非池化由 allocator 决定</p>
+</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215210317443.png" alt="image-20250215210317443"></p>
+<h3 id="RPC框架"><a href="#RPC框架" class="headerlink" title="RPC框架"></a>RPC框架</h3><p>在原聊天项目基础上新增RPC请求和响应消息</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215214202319.png" alt="image-20250215214202319"></p>
+<p>请求信息</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215214309686.png" alt="image-20250215214309686"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215214336205.png" alt="image-20250215214336205"></p>
+<p>响应消息</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215214415641.png" alt="image-20250215214415641"></p>
+<p>服务器架子</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215214527430.png" alt="image-20250215214527430"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215214603253.png" alt="image-20250215214603253"></p>
+<p>客户端架子</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215214628196.png" alt="image-20250215214628196"></p>
+<p>服务端实现</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215220507131.png" alt="image-20250215220507131"></p>
+<p>为了解决Gson的一个bug（非重点）</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215234058273.png" alt="image-20250215234058273"></p>
+<p>获取Channel使用DCL的多线程保护</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250215234643620.png" alt="image-20250215234643620"></p>
+<p>创建代理类以封装RPC请求</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216000730343.png" alt="image-20250216000730343"></p>
+<p>改造代理类，使之与主线程通过Promise通信以获取</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><h3 id="启动剖析"><a href="#启动剖析" class="headerlink" title="启动剖析"></a>启动剖析</h3><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216005711888.png" alt="image-20250216005711888"></p>
+<p><strong>doBind方法</strong></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216011116435.png" alt="image-20250216011116435"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216011145367.png" alt="image-20250216011145367"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216011556730.png" alt="image-20250216011556730"></p>
+<ul>
+<li><p>主线程中运行</p>
+</li>
+<li><p>initAndRegister方法</p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216011938222.png" alt="image-20250216011938222"></p>
+<ul>
+<li>newChannel方法</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216012117024.png" alt="image-20250216012117024"></p>
+<ul>
+<li>原生ServerSocketChannel()方法</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216012327881.png" alt="image-20250216012327881"></p>
+<ul>
+<li>newSocket()方法，创建了JDK的NioServerSocketChannel</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216012425632.png" alt="image-20250216012425632"></p>
+<ul>
+<li>init()方法中的addLast代码片段，向NioServerSocketChannel中添加一个初始化的handler，但此时不调用其代码，即初始化handler等待被调用</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216012939145.png" alt="image-20250216012939145"></p>
+</li>
+<li><p>register()方法</p>
+<ul>
+<li>一路向下调用register，到达一个register方法（切换线程的）</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216013913532.png" alt="image-20250216013913532"></p>
+<ul>
+<li>当前线程是主线程，一定不是NIO线程，所以进入register的else分支</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216014151843.png" alt="image-20250216014151843"></p>
+<ul>
+<li>继续跟进register0方法</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216014302064.png" alt="image-20250216014302064"></p>
+<ul>
+<li>继续跟进doResult()方法，将原生的ssc注册到selector为关注事件，并且将niossc作为attachment</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216014349316.png" alt="image-20250216014349316"></p>
+<ul>
+<li>回到register0方法，pipeline.invokeHandlerAddedIfNeeded()方法将调用niossc中初始化的handler</li>
+<li>handler中代码得到执行，向niossc中加入了acceptor handler（在accept事件发生后建立连接）</li>
+<li>register0中调用safeSetSuccess(promise)使得initAndRegister方法中的regFuture得以返回，以调用回调函数doBind0，代码如下</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216015534086.png" alt="image-20250216015534086"></p>
+<ul>
+<li>层层调用到一个bind()方法处将原生的ssc与8080端口绑定</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216015702905.png" alt="image-20250216015702905"></p>
+<ul>
+<li>紧接着调用到headHandler中的channelActive事件（HeadContext中代码）</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216015957138.png" alt="image-20250216015957138"></p>
+<ul>
+<li>层层调用，在doBeginRead()方法中将selectionKey与accept事件相关联</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216020205808.png" alt="image-20250216020205808"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216020524107.png" alt="image-20250216020524107"></p>
+</li>
+</ul>
+<h3 id="NioEventLoop"><a href="#NioEventLoop" class="headerlink" title="NioEventLoop"></a>NioEventLoop</h3><p>由selector，线程，任务队列组成</p>
+<ul>
+<li>有一个selector和一个unwrappedSelector</li>
+<li>有一个taskQueue</li>
+</ul>
+<p><strong>selector何时被创建</strong></p>
+<ul>
+<li>NioEventLoop构造方法</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216023010791.png" alt="image-20250216023010791"></p>
+<ul>
+<li>跟进openSelector方法，可以发现里面provider.openSelector()方法创建了selector对象</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216023055062.png" alt="image-20250216023055062"></p>
+<p><strong>NioEventLoop中为什么会有两个selector成员</strong></p>
+<ul>
+<li>unwrappedSelector才是NIO底层真正的selector</li>
+<li>而selector是Netty对原生selector包装后的结果</li>
+<li>原生selector中保存selectionKey的容器为Set，遍历效率不高</li>
+<li>Netty将selector中selectionKeys集合的实现替换为数组实现</li>
+</ul>
+<p><strong>EventLoop的NIO线程何时被启动</strong></p>
+<p>当首次调用execute方法时，通过一个状态位state来控制线程不被重复启动</p>
+<ul>
+<li>test代码</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216024350472.png" alt="image-20250216024350472"></p>
+<ul>
+<li>execute方法</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216024324050.png" alt="image-20250216024324050"> </p>
+<ul>
+<li>inEventLoop()方法，判断当前线程和eventLoop线程是否是同一个线程</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216024610604.png" alt="image-20250216024610604"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216024631982.png" alt="image-20250216024631982"></p>
+<ul>
+<li>回到execute方法中，显然进入了if分支中的startThread()方法</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216024923850.png" alt="image-20250216024923850"></p>
+<ul>
+<li>进入doStartThread()方法，将当前线程复制给NIO的thread变量</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216025109743.png" alt="image-20250216025109743"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216025137752.png" alt="image-20250216025137752"></p>
+<ul>
+<li>调用SingleThreadEventExecutor中的run方法，该任务就是在不断寻找IO任务，定时任务进行执行</li>
+</ul>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216025249958.png" alt="image-20250216025249958"></p>
+<p><strong>提交普通任务会不会结束select阻塞</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/01/29/netty/">http://example.com/2025/01/29/netty/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Hexo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/">开发技术</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/05/29/hello-world/" title="Hello World"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Hello World</div></div><div class="info-2"><div class="info-item-1">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;  More info: Writing Run server1$ hexo server  More info: Server Generate static files1$ hexo generate  More info: Generating Deploy to remote sites1$ hexo deploy  More info: Deployment </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NIO%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">NIO基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">三大组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Channel"><span class="toc-number">1.1.1.</span> <span class="toc-text">Channel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#buffer"><span class="toc-number">1.1.2.</span> <span class="toc-text">buffer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#selector"><span class="toc-number">1.1.3.</span> <span class="toc-text">selector</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ByteBuffer"><span class="toc-number">1.2.</span> <span class="toc-text">ByteBuffer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">常见方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scattering-Reads"><span class="toc-number">1.2.3.</span> <span class="toc-text">Scattering Reads</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Gathering-Writes"><span class="toc-number">1.2.4.</span> <span class="toc-text">Gathering Writes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B2%98%E5%8C%85%E5%8D%8A%E5%8C%85%E5%88%86%E6%9E%90"><span class="toc-number">1.2.5.</span> <span class="toc-text">粘包半包分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%BC%96%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">文件编程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FileChannel"><span class="toc-number">1.3.1.</span> <span class="toc-text">FileChannel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AAChannel%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE"><span class="toc-number">1.3.2.</span> <span class="toc-text">两个Channel传输数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Path"><span class="toc-number">1.3.3.</span> <span class="toc-text">Path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Files"><span class="toc-number">1.3.4.</span> <span class="toc-text">Files</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">网络编程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E9%98%BB%E5%A1%9E-vs-%E9%98%BB%E5%A1%9E"><span class="toc-number">1.4.1.</span> <span class="toc-text">非阻塞 vs 阻塞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Selector"><span class="toc-number">1.4.2.</span> <span class="toc-text">Selector</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NIO-vs-BIO"><span class="toc-number">1.5.</span> <span class="toc-text">NIO vs BIO</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#stream-vs-channel"><span class="toc-number">1.5.1.</span> <span class="toc-text">stream vs channel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IO%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.5.2.</span> <span class="toc-text">IO模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.5.3.</span> <span class="toc-text">零拷贝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AIO"><span class="toc-number">1.5.4.</span> <span class="toc-text">AIO</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Netty%E5%85%A5%E9%97%A8"><span class="toc-number">2.</span> <span class="toc-text">Netty入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hello-World"><span class="toc-number">2.1.</span> <span class="toc-text">Hello World</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#EventLoop"><span class="toc-number">2.2.1.</span> <span class="toc-text">EventLoop</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%99%AE%E9%80%9A-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">普通-定时任务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#IO%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">IO任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Channel-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">Channel</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ChannelFuture"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">ChannelFuture</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Netty%E4%BD%BF%E7%94%A8%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">2.2.2.2.</span> <span class="toc-text">Netty使用多线程的优点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Future-Promise"><span class="toc-number">2.2.3.</span> <span class="toc-text">Future &amp; Promise</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Handler-Pipeline"><span class="toc-number">2.2.4.</span> <span class="toc-text">Handler &amp; Pipeline</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#handler%E8%B0%83%E7%94%A8%E9%A1%BA%E5%BA%8F"><span class="toc-number">2.2.4.1.</span> <span class="toc-text">handler调用顺序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#EmbeddedChannel"><span class="toc-number">2.2.4.2.</span> <span class="toc-text">EmbeddedChannel</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteBuf"><span class="toc-number">2.2.5.</span> <span class="toc-text">ByteBuf</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA"><span class="toc-number">2.2.5.1.</span> <span class="toc-text">创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98-vs-%E5%A0%86%E5%86%85%E5%AD%98"><span class="toc-number">2.2.5.2.</span> <span class="toc-text">直接内存 vs 堆内存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B1%A0%E5%8C%96-vs-%E9%9D%9E%E6%B1%A0%E5%8C%96"><span class="toc-number">2.2.5.3.</span> <span class="toc-text">池化 vs 非池化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E6%88%90"><span class="toc-number">2.2.5.4.</span> <span class="toc-text">组成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E5%85%A5"><span class="toc-number">2.2.5.5.</span> <span class="toc-text">写入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%A9%E5%AE%B9"><span class="toc-number">2.2.5.6.</span> <span class="toc-text">扩容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96"><span class="toc-number">2.2.5.7.</span> <span class="toc-text">读取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#retain-release"><span class="toc-number">2.2.5.8.</span> <span class="toc-text">retain &amp; release</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Slice"><span class="toc-number">2.2.5.9.</span> <span class="toc-text">Slice</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#duplicate"><span class="toc-number">2.2.5.10.</span> <span class="toc-text">duplicate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#copy"><span class="toc-number">2.2.5.11.</span> <span class="toc-text">copy</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#composite"><span class="toc-number">2.2.5.12.</span> <span class="toc-text">composite</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Unpooled"><span class="toc-number">2.2.5.13.</span> <span class="toc-text">Unpooled</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E5%90%91%E9%80%9A%E4%BF%A1"><span class="toc-number">2.3.</span> <span class="toc-text">双向通信</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Netty%E8%BF%9B%E9%98%B6"><span class="toc-number">3.</span> <span class="toc-text">Netty进阶</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B2%98%E5%8C%85%E4%B8%8E%E5%8D%8A%E5%8C%85"><span class="toc-number">3.1.</span> <span class="toc-text">粘包与半包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B2%98%E5%8C%85%E7%8E%B0%E8%B1%A1"><span class="toc-number">3.1.1.</span> <span class="toc-text">粘包现象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8A%E5%8C%85%E7%8E%B0%E8%B1%A1"><span class="toc-number">3.1.2.</span> <span class="toc-text">半包现象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">3.1.3.</span> <span class="toc-text">解决方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%AD%E9%93%BE%E6%8E%A5"><span class="toc-number">3.1.3.1.</span> <span class="toc-text">短链接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E9%95%BF%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="toc-number">3.1.3.2.</span> <span class="toc-text">定长解码器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%8C%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="toc-number">3.1.3.3.</span> <span class="toc-text">行解码器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LTC%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="toc-number">3.1.3.4.</span> <span class="toc-text">LTC解码器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE%E8%AE%BE%E8%AE%A1%E4%B8%8E%E8%A7%A3%E6%9E%90"><span class="toc-number">3.2.</span> <span class="toc-text">协议设计与解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.2.1.</span> <span class="toc-text">redis示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.2.2.</span> <span class="toc-text">HTTP示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89"><span class="toc-number">3.2.3.</span> <span class="toc-text">自定义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E4%B8%AD%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">3.3.</span> <span class="toc-text">网络编程中可能出现的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E5%81%87%E6%AD%BB"><span class="toc-number">3.3.1.</span> <span class="toc-text">连接假死</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E5%92%8C%E6%BA%90%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">优化和源码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96"><span class="toc-number">4.1.</span> <span class="toc-text">优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E5%BA%8F%E5%88%97%E5%8C%96%E7%AE%97%E6%B3%95"><span class="toc-number">4.1.1.</span> <span class="toc-text">扩展序列化算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98"><span class="toc-number">4.1.2.</span> <span class="toc-text">参数调优</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CONNECT-TIMEOUT-MILLIS"><span class="toc-number">4.1.2.1.</span> <span class="toc-text">CONNECT_TIMEOUT_MILLIS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SO-BACKLOG"><span class="toc-number">4.1.2.2.</span> <span class="toc-text">SO_BACKLOG</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ulimit-n-%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="toc-number">4.1.2.3.</span> <span class="toc-text">ulimit -n(文件描述符)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP-NODELAY"><span class="toc-number">4.1.2.4.</span> <span class="toc-text">TCP_NODELAY</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SO-SNDBUF-SO-RCVBUF"><span class="toc-number">4.1.2.5.</span> <span class="toc-text">SO_SNDBUF &amp; SO_RCVBUF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ALLOCATOR"><span class="toc-number">4.1.2.6.</span> <span class="toc-text">ALLOCATOR</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RCVBUF-ALLOCATOR"><span class="toc-number">4.1.2.7.</span> <span class="toc-text">RCVBUF_ALLOCATOR</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RPC%E6%A1%86%E6%9E%B6"><span class="toc-number">4.1.3.</span> <span class="toc-text">RPC框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81"><span class="toc-number">4.2.</span> <span class="toc-text">源码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E5%89%96%E6%9E%90"><span class="toc-number">4.2.1.</span> <span class="toc-text">启动剖析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NioEventLoop"><span class="toc-number">4.2.2.</span> <span class="toc-text">NioEventLoop</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/29/hello-world/" title="Hello World">Hello World</a><time datetime="2025-05-29T10:41:10.390Z" title="发表于 2025-05-29 18:41:10">2025-05-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/netty/" title="黑马程序员Netty学习笔记">黑马程序员Netty学习笔记</a><time datetime="2025-01-29T14:12:24.000Z" title="发表于 2025-01-29 22:12:24">2025-01-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By John Doe</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
