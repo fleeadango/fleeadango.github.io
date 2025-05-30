@@ -1,0 +1,810 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>吉林大学机器学习B复习盲点总结 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="当然下面的内容并非都会考到，博主为了追求满绩才做了全面的整理  第一章   绪论1AIGC(AI Generated Content)模型  12345ChatGPT&#x3D;GPT+人类反馈强化学习GPT&#x3D;Generative Pre-trained TransformerGenerative：生成模型(ChatGPT生成的是文本)Pre-trained：预训练Transformer：一种基于Self">
+<meta property="og:type" content="article">
+<meta property="og:title" content="吉林大学机器学习B复习盲点总结">
+<meta property="og:url" content="http://example.com/2024/11/20/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%A4%8D%E4%B9%A0%E7%9B%B2%E7%82%B9/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="当然下面的内容并非都会考到，博主为了追求满绩才做了全面的整理  第一章   绪论1AIGC(AI Generated Content)模型  12345ChatGPT&#x3D;GPT+人类反馈强化学习GPT&#x3D;Generative Pre-trained TransformerGenerative：生成模型(ChatGPT生成的是文本)Pre-trained：预训练Transformer：一种基于Self">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2024-11-20T04:12:23.000Z">
+<meta property="article:modified_time" content="2025-05-30T06:20:51.435Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="课程复习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "吉林大学机器学习B复习盲点总结",
+  "url": "http://example.com/2024/11/20/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%A4%8D%E4%B9%A0%E7%9B%B2%E7%82%B9/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2024-11-20T04:12:23.000Z",
+  "dateModified": "2025-05-30T06:20:51.435Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/11/20/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%A4%8D%E4%B9%A0%E7%9B%B2%E7%82%B9/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '吉林大学机器学习B复习盲点总结',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">吉林大学机器学习B复习盲点总结</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">吉林大学机器学习B复习盲点总结</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-20T04:12:23.000Z" title="发表于 2024-11-20 12:12:23">2024-11-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-30T06:20:51.435Z" title="更新于 2025-05-30 14:20:51">2025-05-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>当然下面的内容并非都会考到，博主为了追求满绩才做了全面的整理</p>
+</blockquote>
+<h1 id="第一章-绪论"><a href="#第一章-绪论" class="headerlink" title="第一章   绪论"></a>第一章   绪论</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AIGC(AI Generated Content)模型</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ChatGPT=GPT+人类反馈强化学习</span><br><span class="line">GPT=Generative Pre-trained Transformer</span><br><span class="line">Generative：生成模型(ChatGPT生成的是文本)</span><br><span class="line">Pre-trained：预训练</span><br><span class="line">Transformer：一种基于Self-Attention的网络模型</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">机器学习≈寻找一个函数</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">机器学习的基本流程</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241203103053929.png" alt="image-20241203103053929"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">机器学习算法的类型</span><br><span class="line"></span><br><span class="line">监督学习</span><br><span class="line">	回归</span><br><span class="line">	分类</span><br><span class="line">无监督学习</span><br><span class="line">	聚类</span><br><span class="line">	降维</span><br><span class="line">半监督学习</span><br><span class="line">自监督学习</span><br><span class="line">强化学习</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241203103413529.png" alt="image-20241203103413529"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241203103426797.png" alt="image-20241203103426797"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">半监督两个基本假设</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241203103459769.png" alt="image-20241203103459769"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241203103509554.png" alt="image-20241203103509554"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241203103533328.png" alt="image-20241203103533328"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">强化学习与判别学习的区别</span><br><span class="line">	强化学习通过判别学习</span><br><span class="line">	有监督学习通过指导学习</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241203104913883.png" alt="image-20241203104913883"></p>
+<h1 id="第二章-线性回归"><a href="#第二章-线性回归" class="headerlink" title="第二章   线性回归"></a>第二章   线性回归</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">线性模型</span><br><span class="line">	形式简单、易于建模</span><br><span class="line">	可解释性</span><br><span class="line">	非线性模型的基础</span><br><span class="line">	引入层级结构或高维映射</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">系数反映了每个特征对结果的影响强弱</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">特征规范化</span><br><span class="line">	特征的尺度缩放到-1到1之间</span><br><span class="line">	各个特征变量的范围要保持相近</span><br><span class="line">	这两个变量分别对应横纵坐标，则代价函数的等高线图非常扁，梯度下降算法将需要更多迭代</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">最小二乘方目标函数</span><br><span class="line">	为了方便使用梯度下降法求解模型参数</span><br><span class="line">	某些问题中具有物理意义</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204094030458.png" alt="image-20241204094030458"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">线性回归两种解法</span><br><span class="line">	正规方程</span><br><span class="line">	梯度下降法</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">最小化优化问题和最大化优化问题</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204095706740.png" alt="image-20241204095706740"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">最小均方算法Least Mean Square （LMS）</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LMS学习规则的性质</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204103909861.png" alt="image-20241204103909861"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LMS学习规则向样本集的推广</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204103932024.png" alt="image-20241204103932024"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BGD和SGD的比较</span><br><span class="line"></span><br><span class="line">BGD 扫描整个训练集后再更新参数</span><br><span class="line">SGD 遇到一个样本后立即更新参数</span><br><span class="line">对于大样本问题，BGD收敛较慢</span><br><span class="line">但SGD有可能发生震荡，而无法收敛到极小值</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mini-batch梯度下降：如果不是每拿到一个样本即更</span><br><span class="line">改梯度，而是若干个样本的平均梯度作为更新方向</span><br><span class="line">，则是 mini-batch梯度下降算法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204104119836.png" alt="image-20241204104119836"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">线性回归的全局极小值保证</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">针对想要收敛到全局极值而做出的改进优化算法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204104422394.png" alt="image-20241204104422394"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">梯度下降法和正规方程法的比较</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204104601168.png" alt="image-20241204104601168"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204104614795.png" alt="image-20241204104614795"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">线性回归的概率解释得出的结论</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204105921257.png" alt="image-20241204105921257"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">局部加权线性回归</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">当我们需要对数据点 𝑥 相应的目标值进行预测的时候，我们需要给样本中的每个点赋予一个权重值 𝑤𝑖 (为了区分权重和回归系数，在这里用 𝜃 表示回归系数，𝑤表示权重)</span><br><span class="line">平方误差表达式如下</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204110224097.png" alt="image-20241204110224097"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204110311273.png" alt="image-20241204110311273"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">权值的作用</span><br><span class="line">放大邻近点的贡献</span><br><span class="line">缩小甚至忽略远距离点的贡献</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">权值形式的选择</span><br><span class="line"></span><br><span class="line">最常用的是高斯核函数</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204111929345.png" alt="image-20241204111929345"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">如果 𝑥𝑖 距离𝑥的距离越小， 𝑤𝑖𝑖 就会越大，</span><br><span class="line">其中参数 𝑘 决定了权重的大小。 𝑘 越大权重</span><br><span class="line">的差距就越小， 𝑘 越小权重的差距就很大</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">非线性模型的多元回归</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204112048933.png" alt="image-20241204112048933"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204112115651.png" alt="image-20241204112115651"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204112124485.png" alt="image-20241204112124485"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">样本离群点</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">欠拟合与过拟合</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">结构风险最小化示意图</span><br><span class="line">VC维的含义就是函数能将多少样本数打散，样本数的最大值即为VC维维度</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204112358757.png" alt="image-20241204112358757"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">正则化</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204112510830.png" alt="image-20241204112510830"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">箱线图</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204112530399.png" alt="image-20241204112530399"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204112540219.png" alt="image-20241204112540219"></p>
+<h1 id="第三章分类问题"><a href="#第三章分类问题" class="headerlink" title="第三章分类问题"></a>第三章分类问题</h1><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204114949980.png" alt="image-20241204114949980"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">分类的训练及预测过程</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204115014023.png" alt="image-20241204115014023"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">是否可以直接用回归解决分类问题？</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204120124148.png" alt="image-20241204120124148"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">决策边界</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204120203428.png" alt="image-20241204120203428"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">能否架起连接线性回归问题和二分类问</span><br><span class="line">题的桥梁？</span><br><span class="line">最理想的函数—单位阶跃函数</span><br><span class="line"></span><br><span class="line">其缺点为：不连续，确定其模型参数θ困难</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204120220106.png" alt="image-20241204120220106"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">硬分类与软分类及其差异</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204120304723.png" alt="image-20241204120304723"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Sigmoid function</span><br><span class="line">单位阶跃函数的替代</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204120350129.png" alt="image-20241204120350129"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Basic Sigmoid function</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204120431965.png" alt="image-20241204120431965"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Logistic函数(分布)的性质</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204120501779.png" alt="image-20241204120501779"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Odds(几率、几率比)</span><br><span class="line">在统计和概率理论中，一个事件或者一个陈述的发生比（英语：Odds）是该事件发生和不发生的比率，又称几率、几率比。是一种相对概率</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204121358005.png" alt="image-20241204121358005"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">似然与概率</span><br><span class="line"></span><br><span class="line">概率描述了已知参数时的随机变量的输出结果；</span><br><span class="line">似然则用来描述已知随机变量输出结果时，未知参数的可能取值。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">例如，对于“一枚正反对称的硬币上抛十次”这种事件，我们可以问硬币落地时十次都是正面向上的“概率”是多少；</span><br><span class="line">而对于“一枚硬币上抛十次”，我们则可以问，这枚硬币正反面对称的“似然”程度是多少。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">区别似然和概率的直接方法为，“XXX的概率&quot;中XXX只能是事件，也就是，事件(发生)的概率是多少；</span><br><span class="line">而“XXX的似然&quot;中的XXX只能是参数，比如说，参数等于某个值时的似然是多少。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">似然与概率的联系</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204121826184.png" alt="image-20241204121826184"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">最大似然估计</span><br><span class="line"></span><br><span class="line">最大似然估计是似然函数最初也是最自然的应用。似然函数取得最大值表示相应的参数能够使得统计模型最为合理。</span><br><span class="line"></span><br><span class="line">实际应用中一般会取似然函数的对数作为求最大值的函</span><br><span class="line">数，这样求出的最大值和直接求最大值得到的结果是相同的。</span><br><span class="line"></span><br><span class="line">似然函数的最大值不一定唯一，也不一定存在。</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">线性回归与对数几率回归的形式比较</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204125725683.png" alt="image-20241204125725683"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Logistic回归多分类的实现</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204132737890.png" alt="image-20241204132737890"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204132748583.png" alt="image-20241204132748583"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">softmax回归</span><br><span class="line">主要估算输入数据 𝑥𝑖 归属于每一类的概率</span><br><span class="line">k个类别</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204133010183.png" alt="image-20241204133010183"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">牛顿法求解对数似然函数的极大值点</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204134142851.png" alt="image-20241204134142851"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204134205880.png" alt="image-20241204134205880"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">模型评估方法和性能评价指标</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204134248004.png" alt="image-20241204134248004"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">过拟合与欠拟合</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204134311866.png" alt="image-20241204134311866"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">训练集，验证集，测试集</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204134326955.png" alt="image-20241204134326955"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">样本集的划分</span><br><span class="line"></span><br><span class="line">留出法</span><br><span class="line"></span><br><span class="line">交叉验证</span><br><span class="line"></span><br><span class="line">自助法 bootstrapping</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204134436436.png" alt="image-20241204134436436"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204134448537.png" alt="image-20241204134448537"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">性能评价指标</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204135418663.png" alt="image-20241204135418663"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204135432795.png" alt="image-20241204135432795"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AUC</span><br><span class="line">（area under curve）</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204135723786.png" alt="image-20241204135723786"></p>
+<h1 id="第四章-人工神经网络"><a href="#第四章-人工神经网络" class="headerlink" title="第四章 人工神经网络"></a>第四章 人工神经网络</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">人工神经网络定义</span><br><span class="line"></span><br><span class="line">“神经网络是由具有适应性的简单单元组</span><br><span class="line">成的广泛并行互联的网络</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">人工神经网络特点</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204135952459.png" alt="image-20241204135952459"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">McCulloch-Pitts Neurons(M-P 模型)</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204140056889.png" alt="image-20241204140056889"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">M-P模型的扩展</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204140137879.png" alt="image-20241204140137879"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Linear weighted model(线性加权模</span><br><span class="line">型)</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204140503540.png" alt="image-20241204140503540"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Logistic threshold model(阈值逻辑</span><br><span class="line">模型)</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204140522373.png" alt="image-20241204140522373"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">广义神经元模型</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204140847297.png" alt="image-20241204140847297"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204140855676.png" alt="image-20241204140855676"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">感知器模型和学习规则</span><br><span class="line"></span><br><span class="line">用一个超平面将两类点分开</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">线性可分</span><br><span class="line">在二维空间上，如果两类点可以被一条直线（高维空间叫超平面）完全分开叫做线性可分。</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">感知机损失函数定义</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204141209487.png" alt="image-20241204141209487"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204141229884.png" alt="image-20241204141229884"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204141238277.png" alt="image-20241204141238277"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204141400312.png" alt="image-20241204141400312"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204141410760.png" alt="image-20241204141410760"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">感知器的收敛性</span><br><span class="line"></span><br><span class="line">如果训练样例线性可分，并且使用了充分小的学习率</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">感知器的表征能力</span><br><span class="line"></span><br><span class="line">感知器看作是n维实例空间（即点空间）中的超平面决策面</span><br><span class="line"></span><br><span class="line">对于超平面一侧的实例，感知器输出1，对于另一侧的实例，输出-1</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">单层前馈神经网络</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204142712590.png" alt="image-20241204142712590"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">多层前馈神经网络</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204142758099.png" alt="image-20241204142758099"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">BP算法</span><br><span class="line">总体思想：正向传播 + 反向传播</span><br><span class="line"></span><br><span class="line">正向传播时，输入信息从输入层开始，经过各层神</span><br><span class="line">经元的处理后产生一个输出。然后，将实际输出和</span><br><span class="line">所需输出进行比较，得到一个误差矢量。</span><br><span class="line"></span><br><span class="line">反向传播过程，从输出层至输入层，利用这个误差</span><br><span class="line">矢量对权值进行逐层修正。</span><br><span class="line"></span><br><span class="line">正向传播和反向传播交替迭代进行</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204142919210.png" alt="image-20241204142919210"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">神经网络的训练技巧</span><br><span class="line">	批处理BP算法</span><br><span class="line">	动态学习率</span><br><span class="line">	其它策略</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">批处理BP算法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204143304769.png" alt="image-20241204143304769"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">自适应学习速率</span><br><span class="line"></span><br><span class="line">流行而简单的想法:每隔几个epoch就把学习速度降低一些</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204143434917.png" alt="image-20241204143434917"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204143448345.png" alt="image-20241204143448345"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204143526705.png" alt="image-20241204143526705"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">动量项</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204143634445.png" alt="image-20241204143634445"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204143723389.png" alt="image-20241204143723389"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">动态学习率 + 动量项</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204143750303.png" alt="image-20241204143750303"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其它策略</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204143821114.png" alt="image-20241204143821114"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">多层前馈网络表示能力</span><br><span class="line"></span><br><span class="line">只需要一个包含足够多神经元的隐层, 多层前馈神经网</span><br><span class="line">络就能以任意精度逼近任意复杂度的连续函数</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">多层前馈网络局限</span><br><span class="line"></span><br><span class="line">神经网络由于强大的表示能力, 经常遭遇过拟合. 表现</span><br><span class="line">为：训练误差持续降低, 但测试误差却可能上升</span><br><span class="line">如何设置隐层神经元的个数仍然是个未决问题. 实际应</span><br><span class="line">用中通常使用“试错法”调整</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">缓解过拟合策略</span><br><span class="line"></span><br><span class="line">早停：在训练过程中, 若训练误差降低, 但验证误差升</span><br><span class="line">高, 则停止训练</span><br><span class="line">正则化：在误差目标函数中增加一项描述网络复杂程</span><br><span class="line">度的部分, 例如连接权值与阈值的平方和</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204150342125.png" alt="image-20241204150342125"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204150404137.png" alt="image-20241204150404137"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">如何保证我们的训练结果?</span><br><span class="line"></span><br><span class="line">交叉验证</span><br><span class="line"></span><br><span class="line">适当地选择网络结构</span><br><span class="line">✓ 尽可能地缩减网络规模——剪枝（Droupout）</span><br><span class="line">✓ 遗传算法训练网络结构</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="续4-常用网络模型"><a href="#续4-常用网络模型" class="headerlink" title="续4 常用网络模型"></a>续4 常用网络模型</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">卷积神经网络(CNNs)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DNN，即深度神经网路的缺点</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204150641369.png" alt="image-20241204150641369"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">为什么在图像上使用CNN</span><br><span class="line"></span><br><span class="line">1.有些模式比整个图像小得多，神经元不需要看到整个图像就能发现模式</span><br><span class="line">2.相同的模式出现在不同的区域，它们可以使用相同的一组参数做几乎相同的事情</span><br><span class="line">3.细分像素不会改变对象，网络处理图像的参数较少</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">常见CNN结构</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204152343572.png" alt="image-20241204152343572"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204152406928.png" alt="image-20241204152406928"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">卷积中的边界检测</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204152449515.png" alt="image-20241204152449515"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">卷积中基于过滤器的特征检测</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204152702953.png" alt="image-20241204152702953"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204152713411.png" alt="image-20241204152713411"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">池化 pooling</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204152954202.png" alt="image-20241204152954202"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204153008373.png" alt="image-20241204153008373"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flatten操作</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204153049337.png" alt="image-20241204153049337"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204153200025.png" alt="image-20241204153200025"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LeNet</span><br><span class="line"></span><br><span class="line">早期用来识别手写数字图像的卷积神经网络</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">循环神经网络(RNNs)</span><br><span class="line"></span><br><span class="line">解决序列数据分析问题</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">词嵌入</span><br><span class="line"></span><br><span class="line">把一个维数为所有词的数量的高维空间嵌入到一个维数低得多的连续向量空间中，每个单词或词组被映射为实数域上的向量</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204153526943.png" alt="image-20241204153526943"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204153617726.png" alt="image-20241204153617726"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204153753601.png" alt="image-20241204153753601"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204153459239.png" alt="image-20241204153459239"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204153846374.png" alt="image-20241204153846374"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输入顺序不同结果不同</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">双向RNN</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204154052343.png" alt="image-20241204154052343"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEEP RNN</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204154111019.png" alt="image-20241204154111019"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RNN存在的问题</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204154146760.png" alt="image-20241204154146760"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">典型模型：长短期记忆</span><br><span class="line">LSTM</span><br><span class="line">Long Short-term Memory</span><br><span class="line"></span><br><span class="line">典型模型：门循环控制单元</span><br><span class="line">GRU</span><br><span class="line">Gated Recurrent Unit</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注意力机制与自注意力</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204154359682.png" alt="image-20241204154359682"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">典型模型：RNN-based Seq2seq</span><br><span class="line"></span><br><span class="line">缺点：缺乏长期记忆</span><br><span class="line"></span><br><span class="line">可以加入attention来改进</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204154428524.png" alt="image-20241204154428524"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使用RNN很难并行，可以用Self-Attention来替代</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204154909709.png" alt="image-20241204154909709"></p>
+<p><img src="C:\Users\THECHOSEN\Desktop\image-20241204155140019.png" alt="image-20241204155140019"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204155217860.png" alt="image-20241204155217860"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Multi-head Self-attention</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204155305106.png" alt="image-20241204155305106"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这一类别也有典型模型：TransFormer</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">图神经网络(GNNs)</span><br><span class="line"></span><br><span class="line">许多真实世界的数据并不是网格的形式.标准的CNN和RNN架构不能处理这些数据</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204155512137.png" alt="image-20241204155512137"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">下游任务</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204155735645.png" alt="image-20241204155735645"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GCNs  图卷积网络</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204155813781.png" alt="image-20241204155813781"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204155831044.png" alt="image-20241204155831044"></p>
+<h1 id="第五章-径向基函数与自组织特征映射神经网络"><a href="#第五章-径向基函数与自组织特征映射神经网络" class="headerlink" title="第五章 径向基函数与自组织特征映射神经网络"></a>第五章 径向基函数与自组织特征映射神经网络</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">神经网络典型应用</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204155953486.png" alt="image-20241204155953486"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204160003231.png" alt="image-20241204160003231"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">径向基函数（Radial basis function）</span><br><span class="line">RBF</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204160046448.png" alt="image-20241204160046448"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204160119997.png" alt="image-20241204160119997"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">常见的径向基函数</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204160144804.png" alt="image-20241204160144804"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">径向基(RBF)神经网络</span><br><span class="line"></span><br><span class="line">一种以径向基函数作为激活函数的人工神经网络</span><br><span class="line"></span><br><span class="line">网络的输出是输入和神经元参数的径向基函数的线性组合，能够以任意精度逼近任意连续函数。</span><br><span class="line"></span><br><span class="line">径向基函数网络有许多用途，包括函数逼近、时间序</span><br><span class="line">列预测、分类和系统控制</span><br><span class="line"></span><br><span class="line">一个隐层：激活函数为径向函数</span><br><span class="line"></span><br><span class="line">神经元的输入离该中心点越远，神经元的激活程度就</span><br><span class="line">越低。隐节点的这一特性常被称为“局部特性</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204164659528.png" alt="image-20241204164659528"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RBF解决回归问题</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204164735643.png" alt="image-20241204164735643"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RBF解决分类问题</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204164854109.png" alt="image-20241204164854109"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">RBF网络与经典神经网络的区别</span><br><span class="line"></span><br><span class="line">隐层不同</span><br><span class="line">一个是内积与tanh做为激活函数</span><br><span class="line">一个是距离与高斯函数做为激活函数</span><br><span class="line"></span><br><span class="line">输出层是相同的，都是线性组合</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204164946771.png" alt="image-20241204164946771"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">完全径向基RBF神经网络</span><br><span class="line"></span><br><span class="line">基函数数量与训练集向量数量相同</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204165456509.png" alt="image-20241204165456509"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204165517429.png" alt="image-20241204165517429"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204165525816.png" alt="image-20241204165525816"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">插值矩阵可逆性条件</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204165619728.png" alt="image-20241204165619728"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">完全内插存在的问题</span><br><span class="line"></span><br><span class="line">1)经过所有训练数据点,当存在噪声时,泛化能力差</span><br><span class="line">2)径向基函数数目与训练样本数相同,当训练样本</span><br><span class="line">数远远大于系统的固有自由度时,问题是超定的,</span><br><span class="line">插值矩阵求逆容易不稳定</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">广义RBF网络</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204165733826.png" alt="image-20241204165733826"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204165920430.png" alt="image-20241204165920430"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">训练方法</span><br><span class="line">聚类确定各基函数的中心</span><br><span class="line">扩展常数的确定</span><br><span class="line">输出层权值的确定</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RBF网络与多层感知器MLP的比较</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204170326978.png" alt="image-20241204170326978"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204170341674.png" alt="image-20241204170341674"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">自组织特征映射神经网络</span><br><span class="line"></span><br><span class="line">一种无监督机器学习技术，用于生成高维数据集的低维(通常是二维)表示，同时保留数据的拓扑结构</span><br><span class="line"></span><br><span class="line">运用竞争学习(competitive learning)策略,依靠神经元之间互相竞争逐步优化网络</span><br><span class="line"></span><br><span class="line">使用近邻关系函数(neighborhood function)来维持输入空间的拓扑结构</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SOM主要特点</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204170724756.png" alt="image-20241204170724756"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">实现细节</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204170932248.png" alt="image-20241204170932248"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204170953296.png" alt="image-20241204170953296"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204171013738.png" alt="image-20241204171013738"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204171155847.png" alt="image-20241204171155847"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">U-Matrix</span><br><span class="line">一个用于描述映射中相邻单元之间距离关系的矩阵</span><br><span class="line">通常，U-Matrix的可视化使用颜色编码来表示距离的大小，从而形成一个直观的拓扑图。</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204171342397.png" alt="image-20241204171342397"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">有助于</span><br><span class="line">识别聚类</span><br><span class="line">发现边界</span><br><span class="line">解释和解释SOM</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+<h1 id="第六章-支持向量机"><a href="#第六章-支持向量机" class="headerlink" title="第六章 支持向量机"></a>第六章 支持向量机</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">二类分类模型。它的基本模型是定义在特征空间上的间隔最大的线性分类器，间隔最大使它有别于感知机。</span><br><span class="line"></span><br><span class="line">支持向量机还包括核技巧，这使它成为实质上的非线性分类器。</span><br><span class="line"></span><br><span class="line">支持向量机的学习策略就是间隔最大化，可形式化为一个求解凸二次规划(convex quadraticprogramming)的问题，也等价于正则化的Hinge损失函数的最小化问题。</span><br><span class="line"></span><br><span class="line">支持向量机的学习算法是求解凸二次规划的最优化算法。</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">核函数(kernel function)表示将输入从输入空间映射到特征空间得到的特征向量之间的内积；</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">核技巧</span><br><span class="line">通过使用核函数可以学习非线性支持向量机，等价于隐式地在高维的特征空间中学习线性支持向量机</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">模式识别</span><br><span class="line">研究的重点是如何通过一系列数学方法让机器来实现类人的识别（认知）能力。</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SVM如何客服过拟合问题</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204172602825.png" alt="image-20241204172602825"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">线性可分支持向量机</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">支持向量机的优化算法：求解优化问题的对偶问题</span><br><span class="line"></span><br><span class="line">为什么要求解对偶问题</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204175445107.png" alt="image-20241204175445107"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">求解线性可分支持向量机的步骤</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204175502821.png" alt="image-20241204175502821"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">广义线性分类器</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204191403396.png" alt="image-20241204191403396"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204191409044.png" alt="image-20241204191409044"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使用广义线性分类器的困难</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204191431159.png" alt="image-20241204191431159"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">最优性条件</span><br><span class="line">Karush-Kuhn-Tucker条件(KKT Condition)</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204192224436.png" alt="image-20241204192224436"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">几种常用核函数</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204192521338.png" alt="image-20241204192521338"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">多类模式识别</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204193005455.png" alt="image-20241204193005455"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204193012654.png" alt="image-20241204193012654"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SVM分类器小结</span><br></pre></td></tr></table></figure>
+
+<p><strong><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204193056580.png" alt="image-20241204193056580"></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">支持向量机回归问题</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">事实上，大部分拉格朗日乘子都为0，只有少数</span><br><span class="line">样本对应的拉格朗日乘子非0，并满足</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204195558899.png" alt="image-20241204195558899"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">风险计算</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204195634138.png" alt="image-20241204195634138"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204195654489.png" alt="image-20241204195654489"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SVM的优势</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204195730525.png" alt="image-20241204195730525"></p>
+<h1 id="第七章-聚类算法"><a href="#第七章-聚类算法" class="headerlink" title="第七章 聚类算法"></a>第七章 聚类算法</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">聚类是什么</span><br><span class="line"></span><br><span class="line">最常见的无监督学习算法，它指的是按照某个特定标（如距离）把一个数据集分割成不同的类或簇，使得同一个簇内的数据对象的相似性尽可能大，同时不在同一个簇中的数据对象的差异性也尽可能地大。</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">聚类中要解决的问题</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204195950689.png" alt="image-20241204195950689"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">数据间的距离/相似度度量</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204200617522.png" alt="image-20241204200617522"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204200628633.png" alt="image-20241204200628633"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204200654428.png" alt="image-20241204200654428"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204200707373.png" alt="image-20241204200707373"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">聚类主要类型</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204201011126.png" alt="image-20241204201011126"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204201019695.png" alt="image-20241204201019695"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204201028371.png" alt="image-20241204201028371"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204201051960.png" alt="image-20241204201051960"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204201121727.png" alt="image-20241204201121727"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204201135102.png" alt="image-20241204201135102"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">K-Means聚类</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204201426203.png" alt="image-20241204201426203"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">K-Means损失函数</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204201453467.png" alt="image-20241204201453467"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">K的选择</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204201945005.png" alt="image-20241204201945005"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">K-Means优缺点</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204202009878.png" alt="image-20241204202009878"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">K-Means的改进算法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204202105454.png" alt="image-20241204202105454"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">层次聚类</span><br><span class="line"></span><br><span class="line">需要度量样本点之间的距离 (dissimilarity) 和类与类之间的联接 (linkage) 程度</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204202201503.png" alt="image-20241204202201503"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类间联系程度度量(Linkage criteria)</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204202359023.png" alt="image-20241204202359023"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204202406557.png" alt="image-20241204202406557"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204202416047.png" alt="image-20241204202416047"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204202452886.png" alt="image-20241204202452886"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204202629868.png" alt="image-20241204202629868"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">层次聚类方法的特点</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204202709063.png" alt="image-20241204202709063"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">密度聚类</span><br><span class="line"></span><br><span class="line">指导思想是，只要样本点的密度大于某阈值，则将该样本添加到最近的簇中。</span><br><span class="line"></span><br><span class="line">可发现任意形状的聚类， 且对噪声数据不敏感。但计算密度单元的计算复杂度大，需要建立空间索引来降低计算量</span><br><span class="line"></span><br><span class="line">核心思想：将簇定义为密度相连的点的最大集合，能够把具有高密度的区域划分为簇</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">点的类别</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204203109561.png" alt="image-20241204203109561"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">点的关系</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204203130713.png" alt="image-20241204203130713"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204203422619.png" alt="image-20241204203422619"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">基于模型的聚类方法</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">吸引子传播(Affinity propagation)算法</span><br><span class="line">基本思想：通过在不同点之间不断的传递信息（吸引度(responsibility)和归属度(availability) ），从而最终选出聚类中心，完成聚类。</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204203707177.png" alt="image-20241204203707177"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204203715251.png" alt="image-20241204203715251"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AP优点</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204203849878.png" alt="image-20241204203849878"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">聚类性能度量</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204008166.png" alt="image-20241204204008166"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">外部指标看PPT得了</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">内部指标</span><br><span class="line">1. 簇内相似度(intra-cluster similarity)高</span><br><span class="line">2. 簇间相似度(inter-cluster similarity)低</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204356209.png" alt="image-20241204204356209"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204404467.png" alt="image-20241204204404467"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204412077.png" alt="image-20241204204412077"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204420722.png" alt="image-20241204204420722"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204430760.png" alt="image-20241204204430760"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204449606.png" alt="image-20241204204449606"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">基于网格的聚类方法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204557343.png" alt="image-20241204204557343"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">步骤</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204639595.png" alt="image-20241204204639595"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EM算法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204204714292.png" alt="image-20241204204714292"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">混合高斯模型</span><br><span class="line">求解使用EM算法</span><br><span class="line">KMEANS可用EM来解释</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204205125894.png" alt="image-20241204205125894"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">密度最大值聚类</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204205322213.png" alt="image-20241204205322213"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204205536523.png" alt="image-20241204205536523"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204205609951.png" alt="image-20241204205609951"></p>
+<h1 id="第八章-数据降维"><a href="#第八章-数据降维" class="headerlink" title="第八章  数据降维"></a>第八章  数据降维</h1><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204205648905.png" alt="image-20241204205648905"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">什么是数据降维？</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204205724413.png" alt="image-20241204205724413"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">为什么要降维</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204205802561.png" alt="image-20241204205802561"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">主成分分析PCA算法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204205828084.png" alt="image-20241204205828084"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204205848814.png" alt="image-20241204205848814"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">主成分的定义：变换后的数据，方差最大的变量𝒚1为原始数据X的第一主成分， 𝒚𝑘为原始数据X的第k主成分。</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">方差贡献率</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204211402209.png" alt="image-20241204211402209"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PCA优缺点</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204211614042.png" alt="image-20241204211614042"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">表征学习</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204211629353.png" alt="image-20241204211629353"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">表征学习的类型：</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204211644999.png" alt="image-20241204211644999"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241204211709003.png" alt="image-20241204211709003"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AutoEncoder存在过拟合的风险解决办法：输入中加入随机噪声</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/11/20/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%A4%8D%E4%B9%A0%E7%9B%B2%E7%82%B9/">http://example.com/2024/11/20/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%A4%8D%E4%B9%A0%E7%9B%B2%E7%82%B9/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Hexo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AF%BE%E7%A8%8B%E5%A4%8D%E4%B9%A0/">课程复习</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/11/20/ssm%E6%A1%86%E6%9E%B6/" title="黑马程序员ssm框架学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">黑马程序员ssm框架学习笔记</div></div><div class="info-2"><div class="info-item-1">Spring12345其实是在学习SpringFrameWorkSpring5.0需要jdk8及以上进行支持Spring中的配置学习是为了熟悉原理，而注解的学习是为了简便开发  Spring Framework系统架构 1AOP可以在不影响程序的前提下增强程序的功能  核心容器核心概念（IoC&#x2F;DI）1目的是充分解耦，使用对象时可以直接从IoC容器中获取到绑定好所有依赖关系的bean    IoC12345Inversion of Control...</div></div></div></a><a class="pagination-related" href="/2024/11/20/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%BB%A3%E7%A0%81/" title="吉林大学设计模式代码总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">吉林大学设计模式代码总结</div></div><div class="info-2"><div class="info-item-1"> 配合设计模式总结笔记使用  设计模式代码创建型模式简单工厂模式（Simple Factory）模式结构 简单示例代码1非常容易理解所以此处不提供代码    简单模式的简化1静态工厂方法写到抽象产品类中   1同样非常容易理解所以此处不提供代码                工厂方法模式(Factory Method)模式结构 简单示例代码1Factory  12345public abstract class PayMethodFactory&#123;    public abstract AbstractPay getPayMethod();&#125;    1ConcreteFactory  1234567public class CashPayFactory extends PayMethodFactory&#123;    public AbstractPay getPayMethod()    &#123;        return new CashPay();    &#125;&#125;...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/11/20/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%BB%A3%E7%A0%81/" title="吉林大学设计模式代码总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-20</div><div class="info-item-2">吉林大学设计模式代码总结</div></div><div class="info-2"><div class="info-item-1"> 配合设计模式总结笔记使用  设计模式代码创建型模式简单工厂模式（Simple Factory）模式结构 简单示例代码1非常容易理解所以此处不提供代码    简单模式的简化1静态工厂方法写到抽象产品类中   1同样非常容易理解所以此处不提供代码                工厂方法模式(Factory Method)模式结构 简单示例代码1Factory  12345public abstract class PayMethodFactory&#123;    public abstract AbstractPay getPayMethod();&#125;    1ConcreteFactory  1234567public class CashPayFactory extends PayMethodFactory&#123;    public AbstractPay getPayMethod()    &#123;        return new CashPay();    &#125;&#125;...</div></div></div></a><a class="pagination-related" href="/2024/12/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%A4%8D%E4%B9%A0/" title="吉林大学计算机网络复习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-20</div><div class="info-item-2">吉林大学计算机网络复习笔记</div></div><div class="info-2"><div class="info-item-1">背诵第一章两种描述“因特网”的方式12345678910描述构成因特网的具体构成，基本硬件和软件组件主机/端系统通信链路分组交换机因特网服务提供商 ISP协议Internet standards（因特网工程任务组 IETF/请求评论 RFC）描述为基础设施向分布式应用程序提供的服务。套接字接口    因特网服务提供商 ISP的作用123提供不同种类的网络接入，住宅宽带接入DSL、高速局域网接入、移动无线接入    不同层ISP12345较高层ISP通过高速光纤链路和高速路由器组成；较低层ISP通过国家的、国际的较高层ISP互联到因特网无论高层还是低层ISP都独立管理    网络协议的特点123通信双方交换报文通信实体是设备因特网中两个或多个通信实体的所有活动都受协议的制约    接入网络的类型12345678910111213141516171819202122232425262728293031家庭接入网	宽带住宅接入有两种流行方式：		数字用户线 DSL		use existing telephone line(双绞线) to central...</div></div></div></a><a class="pagination-related" href="/2024/11/20/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="吉林大学设计模式复习总结笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-20</div><div class="info-item-2">吉林大学设计模式复习总结笔记</div></div><div class="info-2"><div class="info-item-1"> 还是练手速吧，这门课当时考场上手快写断了  课程背景及意义软件设计模式和面向对象的关系12345软件设计模式与面向对象是紧密相关的，是面向对象技术越来越广泛的应用及发展到一定阶段之后的产物设计模式是一套被反复使用、多数人知晓的、经过分类编目的、面向对象程序设计经验的总结，是在面向对象技术不断发展壮大基础上产生的。设计模式之于面向对象软件开发的作用就有如数据结构之于面向过程软件开发的作用。    面向对象123456789101112131415161718192021222324252627282930Coad等给出了一个定义：“面向对象=对象+类+继承+通信”面向对象(Object...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0-%E7%BB%AA%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">第一章   绪论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="toc-number">2.</span> <span class="toc-text">第二章   线性回归</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">第三章分类问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="toc-number">4.</span> <span class="toc-text">第四章 人工神经网络</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%AD4-%E5%B8%B8%E7%94%A8%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.</span> <span class="toc-text">续4 常用网络模型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E5%BE%84%E5%90%91%E5%9F%BA%E5%87%BD%E6%95%B0%E4%B8%8E%E8%87%AA%E7%BB%84%E7%BB%87%E7%89%B9%E5%BE%81%E6%98%A0%E5%B0%84%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="toc-number">6.</span> <span class="toc-text">第五章 径向基函数与自组织特征映射神经网络</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA"><span class="toc-number">7.</span> <span class="toc-text">第六章 支持向量机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E7%AB%A0-%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95"><span class="toc-number">8.</span> <span class="toc-text">第七章 聚类算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E7%AB%A0-%E6%95%B0%E6%8D%AE%E9%99%8D%E7%BB%B4"><span class="toc-number">9.</span> <span class="toc-text">第八章  数据降维</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/29/hello-world/" title="Hello World">Hello World</a><time datetime="2025-05-29T10:41:10.390Z" title="发表于 2025-05-29 18:41:10">2025-05-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/18/%E5%B7%A6%E7%A8%8B%E4%BA%91%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3%E5%AD%A6%E4%B9%A0/" title="左程云算法思想学习笔记——B站视频（待更新）">左程云算法思想学习笔记——B站视频（待更新）</a><time datetime="2025-04-18T14:16:13.000Z" title="发表于 2025-04-18 22:16:13">2025-04-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/java%E7%BC%96%E7%A8%8Bapi/" title="Java刷题一些常见的api">Java刷题一些常见的api</a><time datetime="2025-01-29T14:14:24.000Z" title="发表于 2025-01-29 22:14:24">2025-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/JUC/" title="黑马程序员JUC学习笔记">黑马程序员JUC学习笔记</a><time datetime="2025-01-29T14:14:24.000Z" title="发表于 2025-01-29 22:14:24">2025-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/netty/" title="黑马程序员Netty学习笔记">黑马程序员Netty学习笔记</a><time datetime="2025-01-29T14:12:24.000Z" title="发表于 2025-01-29 22:12:24">2025-01-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By John Doe</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

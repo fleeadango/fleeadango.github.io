@@ -1,0 +1,725 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Java刷题一些常见的api | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Stack常用的 Stack API：1. push(E item) 功能：将元素推入栈中。 参数：item - 要推入栈中的元素。 返回值：没有返回值。  1javastack.push(10); &#x2F;&#x2F; 将 10 推入栈  2. pop() 功能：移除并返回栈顶元素。 返回值：栈顶元素。 异常：如果栈为空，抛出 EmptyStackException。  1javaInteger poppedE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java刷题一些常见的api">
+<meta property="og:url" content="http://example.com/2025/01/29/java%E7%BC%96%E7%A8%8Bapi/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Stack常用的 Stack API：1. push(E item) 功能：将元素推入栈中。 参数：item - 要推入栈中的元素。 返回值：没有返回值。  1javastack.push(10); &#x2F;&#x2F; 将 10 推入栈  2. pop() 功能：移除并返回栈顶元素。 返回值：栈顶元素。 异常：如果栈为空，抛出 EmptyStackException。  1javaInteger poppedE">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-01-29T14:14:24.000Z">
+<meta property="article:modified_time" content="2025-05-30T05:18:20.427Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="算法学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Java刷题一些常见的api",
+  "url": "http://example.com/2025/01/29/java%E7%BC%96%E7%A8%8Bapi/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2025-01-29T14:14:24.000Z",
+  "dateModified": "2025-05-30T05:18:20.427Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/01/29/java%E7%BC%96%E7%A8%8Bapi/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java刷题一些常见的api',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">Java刷题一些常见的api</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Java刷题一些常见的api</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-29T14:14:24.000Z" title="发表于 2025-01-29 22:14:24">2025-01-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-30T05:18:20.427Z" title="更新于 2025-05-30 13:18:20">2025-05-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Stack"><a href="#Stack" class="headerlink" title="Stack"></a>Stack</h2><h3 id="常用的-Stack-API："><a href="#常用的-Stack-API：" class="headerlink" title="常用的 Stack API："></a>常用的 <code>Stack</code> API：</h3><h4 id="1-push-E-item"><a href="#1-push-E-item" class="headerlink" title="1. push(E item)"></a>1. <strong><code>push(E item)</code></strong></h4><ul>
+<li><strong>功能</strong>：将元素推入栈中。</li>
+<li><strong>参数</strong>：<code>item</code> - 要推入栈中的元素。</li>
+<li><strong>返回值</strong>：没有返回值。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javastack.push(10); // 将 10 推入栈</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-pop"><a href="#2-pop" class="headerlink" title="2. pop()"></a>2. <strong><code>pop()</code></strong></h4><ul>
+<li><strong>功能</strong>：移除并返回栈顶元素。</li>
+<li><strong>返回值</strong>：栈顶元素。</li>
+<li><strong>异常</strong>：如果栈为空，抛出 <code>EmptyStackException</code>。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaInteger poppedElement = stack.pop(); // 返回并移除栈顶元素</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-peek"><a href="#3-peek" class="headerlink" title="3. peek()"></a>3. <strong><code>peek()</code></strong></h4><ul>
+<li><strong>功能</strong>：返回栈顶元素，但不移除它。</li>
+<li><strong>返回值</strong>：栈顶元素。</li>
+<li><strong>异常</strong>：如果栈为空，抛出 <code>EmptyStackException</code>。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaInteger topElement = stack.peek(); // 返回栈顶元素但不移除</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-empty"><a href="#4-empty" class="headerlink" title="4. empty()"></a>4. <strong><code>empty()</code></strong></h4><ul>
+<li><strong>功能</strong>：检查栈是否为空。</li>
+<li><strong>返回值</strong>：如果栈为空，返回 <code>true</code>，否则返回 <code>false</code>。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean isEmpty = stack.empty(); // 返回栈是否为空</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-search-Object-o"><a href="#5-search-Object-o" class="headerlink" title="5. search(Object o)"></a>5. <strong><code>search(Object o)</code></strong></h4><ul>
+<li><strong>功能</strong>：查找指定元素的位置（从栈顶开始，位置从 1 开始）。</li>
+<li><strong>返回值</strong>：如果元素存在，返回其位置（从栈顶开始，位置从 1 开始），否则返回 <code>-1</code>。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaint position = stack.search(10); // 查找元素 10 的位置</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-size-继承自-Vector-类"><a href="#6-size-继承自-Vector-类" class="headerlink" title="6. size() (继承自 Vector 类)"></a>6. <strong><code>size()</code></strong> (继承自 <code>Vector</code> 类)</h4><ul>
+<li><strong>功能</strong>：返回栈中元素的数量。</li>
+<li><strong>返回值</strong>：栈中的元素数量。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaint size = stack.size(); // 返回栈中元素的个数</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-clear-继承自-Vector-类"><a href="#7-clear-继承自-Vector-类" class="headerlink" title="7. clear() (继承自 Vector 类)"></a>7. <strong><code>clear()</code></strong> (继承自 <code>Vector</code> 类)</h4><ul>
+<li><strong>功能</strong>：清空栈中所有的元素。</li>
+<li><strong>返回值</strong>：没有返回值。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javastack.clear(); // 清空栈</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><h3 id="常用的-String-API："><a href="#常用的-String-API：" class="headerlink" title="常用的 String API："></a>常用的 <code>String</code> API：</h3><h4 id="1-创建和初始化字符串"><a href="#1-创建和初始化字符串" class="headerlink" title="1. 创建和初始化字符串"></a>1. <strong>创建和初始化字符串</strong></h4><ul>
+<li><p><strong><code>String(String original)</code></strong><br> 构造一个新的字符串对象，该对象的内容是传入的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaString str = new String(&quot;Hello&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>String(char[] value)</code></strong><br> 用字符数组创建一个新的字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javachar[] chars = &#123;&#x27;H&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;, &#x27;o&#x27;&#125;;</span><br><span class="line">String str = new String(chars);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-字符串基本操作"><a href="#2-字符串基本操作" class="headerlink" title="2. 字符串基本操作"></a>2. <strong>字符串基本操作</strong></h4><ul>
+<li><p><strong><code>length()</code></strong><br> 返回字符串的长度（字符数）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">int length = str.length();  // 返回 5</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>charAt(int index)</code></strong><br> 返回指定位置的字符。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">char ch = str.charAt(1);  // 返回 &#x27;e&#x27;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>substring(int start)</code></strong><br> 返回从指定索引到字符串末尾的子字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">String sub = str.substring(2);  // 返回 &quot;llo&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>substring(int start, int end)</code></strong><br> 返回从 <code>start</code> 索引到 <code>end</code> 索引（不包含 <code>end</code>）的子字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">String sub = str.substring(1, 4);  // 返回 &quot;ell&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>indexOf(int ch)</code></strong><br> 返回指定字符首次出现的位置索引，如果没有找到返回 <code>-1</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">int index = str.indexOf(&#x27;e&#x27;);  // 返回 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>indexOf(String str)</code></strong><br> 返回指定子字符串首次出现的位置索引。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">int index = str.indexOf(&quot;lo&quot;);  // 返回 3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>lastIndexOf(int ch)</code></strong><br> 返回指定字符最后一次出现的位置索引。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">int index = str.lastIndexOf(&#x27;l&#x27;);  // 返回 3</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="3-字符串的转换"><a href="#3-字符串的转换" class="headerlink" title="3. 字符串的转换"></a>3. <strong>字符串的转换</strong></h4><ul>
+<li><p><strong><code>toLowerCase()</code></strong><br> 将字符串中的所有字符转换为小写。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">String lower = str.toLowerCase();  // 返回 &quot;hello&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>toUpperCase()</code></strong><br> 将字符串中的所有字符转换为大写。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">String upper = str.toUpperCase();  // 返回 &quot;HELLO&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>trim()</code></strong><br> 去除字符串两端的空格。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;  Hello  &quot;;</span><br><span class="line">String trimmed = str.trim();  // 返回 &quot;Hello&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>valueOf(Object obj)</code></strong><br> 将对象转换为字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaint number = 100;</span><br><span class="line">String str = String.valueOf(number);  // 返回 &quot;100&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-字符串的匹配与比较"><a href="#4-字符串的匹配与比较" class="headerlink" title="4. 字符串的匹配与比较"></a>4. <strong>字符串的匹配与比较</strong></h4><ul>
+<li><p><strong><code>equals(Object obj)</code></strong><br> 比较字符串内容是否相同。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">javaString str1 = &quot;Hello&quot;;</span><br><span class="line">String str2 = &quot;Hello&quot;;</span><br><span class="line">boolean isEqual = str1.equals(str2);  // 返回 true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>equalsIgnoreCase(String anotherString)</code></strong><br> 忽略大小写比较字符串内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">javaString str1 = &quot;Hello&quot;;</span><br><span class="line">String str2 = &quot;hello&quot;;</span><br><span class="line">boolean isEqualIgnoreCase = str1.equalsIgnoreCase(str2);  // 返回 true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>startsWith(String prefix)</code></strong><br> 检查字符串是否以指定的前缀开头。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">boolean starts = str.startsWith(&quot;He&quot;);  // 返回 true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>endsWith(String suffix)</code></strong><br> 检查字符串是否以指定的后缀结尾。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">boolean ends = str.endsWith(&quot;lo&quot;);  // 返回 true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>matches(String regex)</code></strong><br> 检查字符串是否匹配给定的正则表达式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello123&quot;;</span><br><span class="line">boolean matches = str.matches(&quot;Hello\\d+&quot;);  // 返回 true</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="5-字符串的连接与替换"><a href="#5-字符串的连接与替换" class="headerlink" title="5. 字符串的连接与替换"></a>5. <strong>字符串的连接与替换</strong></h4><ul>
+<li><p><strong><code>concat(String str)</code></strong><br> 将指定的字符串连接到当前字符串的末尾。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">javaString str1 = &quot;Hello&quot;;</span><br><span class="line">String str2 = &quot; World&quot;;</span><br><span class="line">String result = str1.concat(str2);  // 返回 &quot;Hello World&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>replace(char oldChar, char newChar)</code></strong><br> 替换字符串中的指定字符。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">String replaced = str.replace(&#x27;e&#x27;, &#x27;a&#x27;);  // 返回 &quot;Hallo&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>replaceAll(String regex, String replacement)</code></strong><br> 使用正则表达式替换匹配的部分。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello 123&quot;;</span><br><span class="line">String replaced = str.replaceAll(&quot;\\d&quot;, &quot;#&quot;);  // 返回 &quot;Hello ###&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>split(String regex)</code></strong><br> 根据指定的正则表达式分割字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;apple,banana,orange&quot;;</span><br><span class="line">String[] fruits = str.split(&quot;,&quot;);  // 返回 [&quot;apple&quot;, &quot;banana&quot;, &quot;orange&quot;]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>join(CharSequence delimiter, CharSequence... elements)</code></strong><br> 使用指定的分隔符连接多个字符串元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString[] words = &#123;&quot;apple&quot;, &quot;banana&quot;, &quot;orange&quot;&#125;;</span><br><span class="line">String result = String.join(&quot;, &quot;, words);  // 返回 &quot;apple, banana, orange&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="6-其他常用方法"><a href="#6-其他常用方法" class="headerlink" title="6. 其他常用方法"></a>6. <strong>其他常用方法</strong></h4><ul>
+<li><p><strong><code>contains(CharSequence sequence)</code></strong><br> 检查字符串是否包含指定的子字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello World&quot;;</span><br><span class="line">boolean contains = str.contains(&quot;World&quot;);  // 返回 true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>isEmpty()</code></strong><br> 检查字符串是否为空（长度为 0）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;&quot;;</span><br><span class="line">boolean isEmpty = str.isEmpty();  // 返回 true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>toCharArray()</code></strong><br> 将字符串转换为字符数组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;Hello&quot;;</span><br><span class="line">char[] chars = str.toCharArray();  // 返回 [&#x27;H&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;, &#x27;o&#x27;]</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="常见转换方法"><a href="#常见转换方法" class="headerlink" title="常见转换方法"></a>常见转换方法</h2><h3 id="1-字符串转为数字"><a href="#1-字符串转为数字" class="headerlink" title="1. 字符串转为数字"></a>1. <strong>字符串转为数字</strong></h3><ul>
+<li><p><strong><code>Integer.parseInt(String s)</code></strong><br> 将字符串转换为 <code>int</code> 类型。若字符串无法解析为有效的整数，将抛出 <code>NumberFormatException</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;123&quot;;</span><br><span class="line">int num = Integer.parseInt(str);  // 返回 123</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Double.parseDouble(String s)</code></strong><br> 将字符串转换为 <code>double</code> 类型。若字符串无法解析为有效的浮点数，将抛出 <code>NumberFormatException</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;3.14&quot;;</span><br><span class="line">double num = Double.parseDouble(str);  // 返回 3.14</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Float.parseFloat(String s)</code></strong><br> 将字符串转换为 <code>float</code> 类型。若字符串无法解析为有效的浮点数，将抛出 <code>NumberFormatException</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;3.14&quot;;</span><br><span class="line">float num = Float.parseFloat(str);  // 返回 3.14</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Long.parseLong(String s)</code></strong><br> 将字符串转换为 <code>long</code> 类型。若字符串无法解析为有效的长整型数值，将抛出 <code>NumberFormatException</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;123456789&quot;;</span><br><span class="line">long num = Long.parseLong(str);  // 返回 123456789</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Short.parseShort(String s)</code></strong><br> 将字符串转换为 <code>short</code> 类型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;123&quot;;</span><br><span class="line">short num = Short.parseShort(str);  // 返回 123</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Byte.parseByte(String s)</code></strong><br> 将字符串转换为 <code>byte</code> 类型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;127&quot;;</span><br><span class="line">byte num = Byte.parseByte(str);  // 返回 127</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Character.getNumericValue(char ch)</code></strong><br> 将字符转换为数字。适用于单个字符的转换。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javachar ch = &#x27;5&#x27;;</span><br><span class="line">int num = Character.getNumericValue(ch);  // 返回 5</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-数字转为字符串"><a href="#2-数字转为字符串" class="headerlink" title="2. 数字转为字符串"></a>2. <strong>数字转为字符串</strong></h3><ul>
+<li><p><strong><code>String.valueOf(int i)</code></strong><br> 将 <code>int</code> 类型转换为字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaint num = 123;</span><br><span class="line">String str = String.valueOf(num);  // 返回 &quot;123&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>String.valueOf(double d)</code></strong><br> 将 <code>double</code> 类型转换为字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javadouble num = 3.14;</span><br><span class="line">String str = String.valueOf(num);  // 返回 &quot;3.14&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>String.valueOf(Object obj)</code></strong><br> 将对象转换为字符串。如果对象为 <code>null</code>，返回字符串 <code>&quot;null&quot;</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaInteger num = 123;</span><br><span class="line">String str = String.valueOf(num);  // 返回 &quot;123&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Integer.toString(int i)</code></strong><br> 将 <code>int</code> 类型转换为字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaint num = 123;</span><br><span class="line">String str = Integer.toString(num);  // 返回 &quot;123&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Double.toString(double d)</code></strong><br> 将 <code>double</code> 类型转换为字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javadouble num = 3.14;</span><br><span class="line">String str = Double.toString(num);  // 返回 &quot;3.14&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="3-自动拆装箱与手动拆装箱"><a href="#3-自动拆装箱与手动拆装箱" class="headerlink" title="3. 自动拆装箱与手动拆装箱"></a>3. <strong>自动拆装箱与手动拆装箱</strong></h3><ul>
+<li><p><strong>自动拆装箱 (Autoboxing)</strong><br> Java 会自动将基本类型转换为包装类型。例如，<code>int</code> 转为 <code>Integer</code>，<code>double</code> 转为 <code>Double</code> 等。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaint num = 123;</span><br><span class="line">Integer numWrapper = num;  // 自动拆箱，将 int 转为 Integer</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>手动拆装箱 (Unboxing)</strong><br> 手动将包装类转换为基本类型。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaInteger numWrapper = 123;</span><br><span class="line">int num = numWrapper;  // 自动拆箱，将 Integer 转为 int</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4-基本数据类型之间的转换"><a href="#4-基本数据类型之间的转换" class="headerlink" title="4. 基本数据类型之间的转换"></a>4. <strong>基本数据类型之间的转换</strong></h3><ul>
+<li><p><strong><code>int</code> 转为 <code>long</code></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaint num1 = 123;</span><br><span class="line">long num2 = num1;  // 自动转换，无需显式强制类型转换</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>long</code> 转为 <code>int</code></strong> 强制类型转换（<code>long</code> 可能会丢失精度）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javalong num1 = 123456789L;</span><br><span class="line">int num2 = (int) num1;  // 强制转换，可能会丢失数据</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>int</code> 转为 <code>double</code></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaint num1 = 123;</span><br><span class="line">double num2 = num1;  // 自动转换，无需显式强制类型转换</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>double</code> 转为 <code>int</code></strong> 强制类型转换（<code>double</code> 小数部分会被丢弃）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javadouble num1 = 3.14;</span><br><span class="line">int num2 = (int) num1;  // 强制转换，返回 3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>float</code> 转为 <code>double</code></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javafloat num1 = 3.14f;</span><br><span class="line">double num2 = num1;  // 自动转换，无需显式强制类型转换</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>double</code> 转为 <code>float</code></strong> 强制类型转换（<code>double</code> 可能会丢失精度）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javadouble num1 = 3.14;</span><br><span class="line">float num2 = (float) num1;  // 强制转换，可能会丢失精度</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="5-其他常见转换"><a href="#5-其他常见转换" class="headerlink" title="5. 其他常见转换"></a>5. <strong>其他常见转换</strong></h3><ul>
+<li><p><strong><code>Boolean.parseBoolean(String s)</code></strong><br> 将字符串转换为布尔值。如果字符串为 <code>&quot;true&quot;</code>（不区分大小写），返回 <code>true</code>，否则返回 <code>false</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;true&quot;;</span><br><span class="line">boolean flag = Boolean.parseBoolean(str);  // 返回 true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>Boolean.valueOf(String s)</code></strong><br> 与 <code>Boolean.parseBoolean()</code> 相似，但它返回 <code>Boolean</code> 对象。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaString str = &quot;true&quot;;</span><br><span class="line">Boolean flag = Boolean.valueOf(str);  // 返回 Boolean.TRUE</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>String.format()</code></strong><br> 格式化数字和其他数据类型为字符串。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaint num = 123;</span><br><span class="line">String str = String.format(&quot;The number is %d&quot;, num);  // 返回 &quot;The number is 123&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h1><p><code>HashMap</code> 是 Java 中最常用的集合类之一，它实现了 <code>Map</code> 接口，用于存储键值对（key-value）。下面是一些常见的 <code>HashMap</code> API 方法：</p>
+<h3 id="1-基本操作"><a href="#1-基本操作" class="headerlink" title="1. 基本操作"></a>1. <strong>基本操作</strong></h3><ul>
+<li><p><strong><code>put(K key, V value)</code></strong><br> 将指定的键值对添加到 <code>HashMap</code> 中。如果键已存在，则更新其对应的值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javamap.put(&quot;key1&quot;, &quot;value1&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>get(Object key)</code></strong><br> 根据指定的键获取对应的值。如果键不存在，返回 <code>null</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaString value = map.get(&quot;key1&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>remove(Object key)</code></strong><br> 删除指定键的键值对。如果存在，则返回被删除的值；如果键不存在，返回 <code>null</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaString removedValue = map.remove(&quot;key1&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>containsKey(Object key)</code></strong><br> 检查 <code>HashMap</code> 是否包含指定的键。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean exists = map.containsKey(&quot;key1&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>containsValue(Object value)</code></strong><br> 检查 <code>HashMap</code> 是否包含指定的值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean exists = map.containsValue(&quot;value1&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>isEmpty()</code></strong><br> 检查 <code>HashMap</code> 是否为空。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean empty = map.isEmpty();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>size()</code></strong><br> 获取 <code>HashMap</code> 中键值对的数量。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaint size = map.size();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>clear()</code></strong><br> 清空 <code>HashMap</code> 中的所有键值对。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javamap.clear();</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-获取视图"><a href="#2-获取视图" class="headerlink" title="2. 获取视图"></a>2. <strong>获取视图</strong></h3><ul>
+<li><p><strong><code>keySet()</code></strong><br> 返回一个包含 <code>HashMap</code> 中所有键的 <code>Set</code> 视图。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaSet&lt;K&gt; keys = map.keySet();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>values()</code></strong><br> 返回一个包含 <code>HashMap</code> 中所有值的 <code>Collection</code> 视图。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaCollection&lt;V&gt; values = map.values();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>entrySet()</code></strong><br> 返回一个包含 <code>HashMap</code> 中所有键值对（<code>Map.Entry</code> 对象）的 <code>Set</code> 视图。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaSet&lt;Map.Entry&lt;K, V&gt;&gt; entrySet = map.entrySet();</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="3-其他辅助方法"><a href="#3-其他辅助方法" class="headerlink" title="3. 其他辅助方法"></a>3. <strong>其他辅助方法</strong></h3><ul>
+<li><p><strong><code>putIfAbsent(K key, V value)</code></strong><br> 如果指定的键不存在，则将键值对添加到 <code>HashMap</code> 中。如果键已存在，不做任何操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javamap.putIfAbsent(&quot;key1&quot;, &quot;value1&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>computeIfAbsent(K key, Function&lt;? super K, ? extends V&gt; mappingFunction)</code></strong><br> 如果指定的键不存在，则使用提供的函数计算并插入值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javamap.computeIfAbsent(&quot;key1&quot;, key -&gt; &quot;computedValue&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>replace(K key, V oldValue, V newValue)</code></strong><br> 如果 <code>HashMap</code> 中的键存在且其值与 <code>oldValue</code> 相等，则替换为 <code>newValue</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javamap.replace(&quot;key1&quot;, &quot;oldValue&quot;, &quot;newValue&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>replace(K key, V value)</code></strong><br> 如果 <code>HashMap</code> 中的键存在，则替换其对应的值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javamap.replace(&quot;key1&quot;, &quot;newValue&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>forEach(BiConsumer&lt;? super K, ? super V&gt; action)</code></strong><br> 对 <code>HashMap</code> 中的每个键值对执行指定的操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javamap.forEach((key, value) -&gt; System.out.println(key + &quot;: &quot; + value));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>getOrDefault(Object key, V defaultValue)</code></strong><br> 如果指定的键存在，返回其对应的值；否则返回默认值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaString value = map.getOrDefault(&quot;key1&quot;, &quot;default&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>remove(Object key, Object value)</code></strong><br> 如果指定的键存在并且其对应的值与 <code>value</code> 相等，则移除该键值对。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javamap.remove(&quot;key1&quot;, &quot;value1&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>replaceAll(BiFunction&lt;? super K, ? super V, ? extends V&gt; function)</code></strong><br> 使用指定的函数替换 <code>HashMap</code> 中每个键对应的值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javamap.replaceAll((key, value) -&gt; value.toUpperCase());</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4-线程安全相关"><a href="#4-线程安全相关" class="headerlink" title="4. 线程安全相关"></a>4. <strong>线程安全相关</strong></h3><p>虽然 <code>HashMap</code> 本身不是线程安全的，但可以通过一些方法保证线程安全：</p>
+<ul>
+<li><p><code>Collections.synchronizedMap(Map&lt;K, V&gt; map)</code></p>
+<p>将</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HashMap</span><br></pre></td></tr></table></figure>
+
+<p>包装成线程安全的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map</span><br></pre></td></tr></table></figure>
+
+<p>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaMap&lt;String, String&gt; syncMap = Collections.synchronizedMap(map);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="5-重要注意事项"><a href="#5-重要注意事项" class="headerlink" title="5. 重要注意事项"></a>5. <strong>重要注意事项</strong></h3><ul>
+<li><code>HashMap</code> 中的键是 <strong>无序</strong> 的，插入顺序不被保证。如果需要按插入顺序维护键值对，可以使用 <code>LinkedHashMap</code>。</li>
+<li><code>HashMap</code> 允许 <strong>null</strong> 键和 <strong>null</strong> 值，但其性能可能受影响。</li>
+<li><code>HashMap</code> 的容量和负载因子可以通过构造函数进行设置，调整它们有助于优化性能。</li>
+</ul>
+<p>这些是 <code>HashMap</code> 中常见的 API 方法，它们帮助你有效地操作和管理键值对数据。</p>
+<h1 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h1><p><code>HashSet</code> 是 Java 中基于哈希表实现的集合类，它实现了 <code>Set</code> 接口，具有元素唯一性。以下是 <code>HashSet</code> 中常用的 API 方法：</p>
+<h3 id="1-基本操作-1"><a href="#1-基本操作-1" class="headerlink" title="1. 基本操作"></a>1. <strong>基本操作</strong></h3><ul>
+<li><p><strong><code>add(E e)</code></strong><br> 向 <code>HashSet</code> 中添加元素，如果元素已存在，则不添加，并返回 <code>false</code>；否则，返回 <code>true</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaset.add(&quot;element&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>remove(Object o)</code></strong><br> 移除 <code>HashSet</code> 中指定的元素。如果移除成功，返回 <code>true</code>；否则返回 <code>false</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean isRemoved = set.remove(&quot;element&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>contains(Object o)</code></strong><br> 检查 <code>HashSet</code> 是否包含指定元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean contains = set.contains(&quot;element&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>size()</code></strong><br> 返回 <code>HashSet</code> 中元素的个数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaint size = set.size();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>isEmpty()</code></strong><br> 检查 <code>HashSet</code> 是否为空。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean isEmpty = set.isEmpty();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>clear()</code></strong><br> 清空 <code>HashSet</code> 中的所有元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaset.clear();</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-批量操作"><a href="#2-批量操作" class="headerlink" title="2. 批量操作"></a>2. <strong>批量操作</strong></h3><ul>
+<li><p><strong><code>addAll(Collection&lt;? extends E&gt; c)</code></strong><br> 将指定集合中的所有元素添加到 <code>HashSet</code> 中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaset.addAll(anotherSet);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>removeAll(Collection&lt;?&gt; c)</code></strong><br> 移除 <code>HashSet</code> 中与指定集合中元素相同的所有元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaset.removeAll(anotherSet);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>retainAll(Collection&lt;?&gt; c)</code></strong><br> 保留 <code>HashSet</code> 中与指定集合中相同的元素，其他元素删除。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaset.retainAll(anotherSet);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>containsAll(Collection&lt;?&gt; c)</code></strong><br> 检查 <code>HashSet</code> 是否包含指定集合中的所有元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean containsAll = set.containsAll(anotherSet);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="3-迭代操作"><a href="#3-迭代操作" class="headerlink" title="3. 迭代操作"></a>3. <strong>迭代操作</strong></h3><ul>
+<li><p><strong><code>iterator()</code></strong><br> 返回一个迭代器，用于遍历 <code>HashSet</code> 中的元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">javaIterator&lt;String&gt; iterator = set.iterator();</span><br><span class="line">while (iterator.hasNext()) &#123;</span><br><span class="line">    String element = iterator.next();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>forEach(Consumer&lt;? super E&gt; action)</code></strong><br> 对 <code>HashSet</code> 中的每个元素执行指定操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaset.forEach(element -&gt; System.out.println(element));</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4-集合视图"><a href="#4-集合视图" class="headerlink" title="4. 集合视图"></a>4. <strong>集合视图</strong></h3><ul>
+<li><p><strong><code>toArray()</code></strong><br> 将 <code>HashSet</code> 转换为包含所有元素的数组（返回 <code>Object[]</code> 类型）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaObject[] array = set.toArray();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>toArray(T[] a)</code></strong><br> 将 <code>HashSet</code> 转换为指定类型的数组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaString[] array = set.toArray(new String[0]);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="5-其他辅助方法"><a href="#5-其他辅助方法" class="headerlink" title="5. 其他辅助方法"></a>5. <strong>其他辅助方法</strong></h3><ul>
+<li><p><strong><code>clone()</code></strong><br> 创建并返回 <code>HashSet</code> 的一个副本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaHashSet&lt;String&gt; clonedSet = (HashSet&lt;String&gt;) set.clone();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>isSubset(Collection&lt;?&gt; c)</code></strong><br> 检查当前集合是否是另一个集合的子集。该方法通过 <code>retainAll</code> 来实现。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean isSubset = set.containsAll(anotherSet);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>hashCode()</code></strong><br> 返回 <code>HashSet</code> 的哈希码，通常用于与其他集合进行比较或存储。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaint hashCode = set.hashCode();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>equals(Object o)</code></strong><br> 检查 <code>HashSet</code> 是否与另一个对象相等。两个 <code>HashSet</code> 相等的条件是它们包含相同的元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean isEqual = set.equals(anotherSet);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="6-线程安全"><a href="#6-线程安全" class="headerlink" title="6. 线程安全"></a>6. <strong>线程安全</strong></h3><p><code>HashSet</code> 本身是 <strong>非线程安全</strong> 的。如果需要在多线程环境下使用，可以使用以下方法使其线程安全：</p>
+<ul>
+<li><p><code>Collections.synchronizedSet(Set&lt;T&gt; s)</code></p>
+<p>将</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HashSet</span><br></pre></td></tr></table></figure>
+
+<p>包装为线程安全的集合。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaSet&lt;String&gt; synchronizedSet = Collections.synchronizedSet(set);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="7-重要注意事项"><a href="#7-重要注意事项" class="headerlink" title="7. 重要注意事项"></a>7. <strong>重要注意事项</strong></h3><ul>
+<li><code>HashSet</code> 是 <strong>无序</strong> 的，不保证元素的顺序。</li>
+<li>它的元素是 <strong>唯一</strong> 的，不能包含重复的元素。</li>
+<li><code>HashSet</code> 允许一个 <code>null</code> 元素，但只有一个。</li>
+<li><code>HashSet</code> 的元素根据其 <strong>哈希值</strong> 存储和检索，因此其查找、删除操作的时间复杂度为 O(1)。</li>
+</ul>
+<p>以上是 <code>HashSet</code> 的常见 API 方法，这些方法使得你可以灵活地操作集合中的元素，并提供了高效的性能。</p>
+<h1 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h1><p><code>ArrayList</code> 是 Java 中最常用的动态数组实现，它属于 <code>List</code> 接口。以下是 <code>ArrayList</code> 中常见的 API 方法：</p>
+<h3 id="1-基本操作-2"><a href="#1-基本操作-2" class="headerlink" title="1. 基本操作"></a>1. <strong>基本操作</strong></h3><ul>
+<li><p><strong><code>add(E e)</code></strong><br> 向 <code>ArrayList</code> 的末尾添加元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.add(&quot;element&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>add(int index, E element)</code></strong><br> 在指定位置插入元素，其他元素会自动向后移动。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.add(1, &quot;newElement&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>remove(Object o)</code></strong><br> 移除第一次出现的指定元素，如果元素存在则返回 <code>true</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.remove(&quot;element&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>remove(int index)</code></strong><br> 移除指定索引位置的元素，返回被移除的元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaString removedElement = list.remove(0);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>get(int index)</code></strong><br> 返回指定索引位置的元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaString element = list.get(0);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>set(int index, E element)</code></strong><br> 替换指定索引位置的元素，返回旧元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaString oldElement = list.set(1, &quot;newValue&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>clear()</code></strong><br> 清空 <code>ArrayList</code> 中的所有元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.clear();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>contains(Object o)</code></strong><br> 检查 <code>ArrayList</code> 是否包含指定元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean contains = list.contains(&quot;element&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>size()</code></strong><br> 返回 <code>ArrayList</code> 中的元素个数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaint size = list.size();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>isEmpty()</code></strong><br> 检查 <code>ArrayList</code> 是否为空。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean empty = list.isEmpty();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>indexOf(Object o)</code></strong><br> 返回指定元素第一次出现的索引位置，如果没有找到则返回 -1。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaint index = list.indexOf(&quot;element&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>lastIndexOf(Object o)</code></strong><br> 返回指定元素最后一次出现的索引位置，如果没有找到则返回 -1。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaint lastIndex = list.lastIndexOf(&quot;element&quot;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-批量操作-1"><a href="#2-批量操作-1" class="headerlink" title="2. 批量操作"></a>2. <strong>批量操作</strong></h3><ul>
+<li><p><strong><code>addAll(Collection&lt;? extends E&gt; c)</code></strong><br> 将指定集合中的所有元素添加到 <code>ArrayList</code> 的末尾。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.addAll(otherList);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>addAll(int index, Collection&lt;? extends E&gt; c)</code></strong><br> 从指定索引位置开始将指定集合中的所有元素添加到 <code>ArrayList</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.addAll(2, otherList);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>removeAll(Collection&lt;?&gt; c)</code></strong><br> 移除 <code>ArrayList</code> 中与指定集合中元素相同的所有元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.removeAll(otherList);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>retainAll(Collection&lt;?&gt; c)</code></strong><br> 保留 <code>ArrayList</code> 中与指定集合中相同的元素，其他元素删除。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.retainAll(otherList);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>containsAll(Collection&lt;?&gt; c)</code></strong><br> 检查 <code>ArrayList</code> 是否包含指定集合中的所有元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaboolean containsAll = list.containsAll(otherList);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>toArray()</code></strong><br> 将 <code>ArrayList</code> 转换为一个包含所有元素的数组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaObject[] array = list.toArray();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>toArray(T[] a)</code></strong><br> 将 <code>ArrayList</code> 转换为指定类型的数组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaString[] array = list.toArray(new String[0]);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="3-迭代操作-1"><a href="#3-迭代操作-1" class="headerlink" title="3. 迭代操作"></a>3. <strong>迭代操作</strong></h3><ul>
+<li><p><strong><code>iterator()</code></strong><br> 返回一个迭代器，用于遍历 <code>ArrayList</code> 中的元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">javaIterator&lt;String&gt; iterator = list.iterator();</span><br><span class="line">while (iterator.hasNext()) &#123;</span><br><span class="line">    String element = iterator.next();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>listIterator()</code></strong><br> 返回一个 <code>ListIterator</code>，用于双向遍历 <code>ArrayList</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaListIterator&lt;String&gt; listIterator = list.listIterator();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>forEach(Consumer&lt;? super E&gt; action)</code></strong><br> 对 <code>ArrayList</code> 中的每个元素执行指定操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.forEach(element -&gt; System.out.println(element));</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4-其他辅助方法"><a href="#4-其他辅助方法" class="headerlink" title="4. 其他辅助方法"></a>4. <strong>其他辅助方法</strong></h3><ul>
+<li><p><strong><code>subList(int fromIndex, int toIndex)</code></strong><br> 返回 <code>ArrayList</code> 中从 <code>fromIndex</code> 到 <code>toIndex</code> 之间的子列表（不包含 <code>toIndex</code>）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaList&lt;String&gt; sublist = list.subList(1, 3);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>ensureCapacity(int minCapacity)</code></strong><br> 确保 <code>ArrayList</code> 至少能容纳指定数量的元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.ensureCapacity(100);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>trimToSize()</code></strong><br> 将 <code>ArrayList</code> 的容量调整为当前元素的大小，释放未使用的内存。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javalist.trimToSize();</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="5-线程安全"><a href="#5-线程安全" class="headerlink" title="5. 线程安全"></a>5. <strong>线程安全</strong></h3><p><code>ArrayList</code> 本身是 <strong>非线程安全</strong> 的。如果需要在多线程环境下使用，可以使用以下方法使其线程安全：</p>
+<ul>
+<li><p><code>Collections.synchronizedList(List&lt;T&gt; list)</code></p>
+<p>将</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ArrayList</span><br></pre></td></tr></table></figure>
+
+<p>包装为线程安全的列表。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javaList&lt;String&gt; synchronizedList = Collections.synchronizedList(list);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="6-重要注意事项"><a href="#6-重要注意事项" class="headerlink" title="6. 重要注意事项"></a>6. <strong>重要注意事项</strong></h3><ul>
+<li><code>ArrayList</code> 是 <strong>有序</strong> 的，保持元素的插入顺序。</li>
+<li>它的元素是 <strong>可重复</strong> 的，可以包含重复的元素。</li>
+<li>由于其实现是基于动态数组，<code>ArrayList</code> 的索引访问非常高效，时间复杂度是 O(1)。</li>
+<li>对于大规模数据的插入和删除操作，特别是在列表开头或中间，性能较差，时间复杂度为 O(n)。</li>
+</ul>
+<p>以上是 <code>ArrayList</code> 的一些常见 API 方法，它们帮助你管理动态数组并提供了丰富的功能来操作集合中的元素。</p>
+<h1 id="JAVA常用常量"><a href="#JAVA常用常量" class="headerlink" title="JAVA常用常量"></a>JAVA常用常量</h1><p>在 Java 中，<code>INTMAX</code> 和 <code>INTMIN</code> 并不是标准的常量名，但它们可能是指 Java 中与整数类型相关的常量：<code>Integer.MAX_VALUE</code> 和 <code>Integer.MIN_VALUE</code>。这两个常量用于表示 <code>int</code> 类型的最大值和最小值。</p>
+<h3 id="1-Integer-MAX-VALUE"><a href="#1-Integer-MAX-VALUE" class="headerlink" title="1. Integer.MAX_VALUE"></a>1. <strong><code>Integer.MAX_VALUE</code></strong></h3><ul>
+<li>代表 <code>int</code> 类型能表示的最大整数值。</li>
+<li>它的值是 <code>2^31 - 1</code>，即 <code>2147483647</code>。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaint maxValue = Integer.MAX_VALUE;</span><br><span class="line">System.out.println(maxValue);  // 输出：2147483647</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Integer-MIN-VALUE"><a href="#2-Integer-MIN-VALUE" class="headerlink" title="2. Integer.MIN_VALUE"></a>2. <strong><code>Integer.MIN_VALUE</code></strong></h3><ul>
+<li>代表 <code>int</code> 类型能表示的最小整数值。</li>
+<li>它的值是 <code>-2^31</code>，即 <code>-2147483648</code>。</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javaint minValue = Integer.MIN_VALUE;</span><br><span class="line">System.out.println(minValue);  // 输出：-2147483648</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><ul>
+<li><code>Integer.MAX_VALUE</code> 是 <code>int</code> 类型可以表示的最大值：<code>2147483647</code>。</li>
+<li><code>Integer.MIN_VALUE</code> 是 <code>int</code> 类型可以表示的最小值：<code>-2147483648</code>。</li>
+</ul>
+<p>这些常量常用于溢出检查、边界条件的判断等场景。</p>
+<p>在 Java 中，<code>int[]</code> 是基本数据类型的数组，不像集合类（如 <code>ArrayList</code>）有很多内置的 API。但是，对于数组的操作，我们可以使用一些常见的算法和 Java 提供的工具类（如 <code>Arrays</code> 类）来实现常见操作，例如求和、排序、查找等。下面列出了一些常见的操作以及相关的 API。</p>
+<h1 id="常见的-int-操作及其-API"><a href="#常见的-int-操作及其-API" class="headerlink" title="常见的 int[] 操作及其 API"></a>常见的 <code>int[]</code> 操作及其 API</h1><ol>
+<li><p><strong>求数组总和（sum）</strong>： 你可以使用一个简单的循环或者 Java 8 的 <code>Streams</code> 来计算数组元素的总和。</p>
+<p><strong>手动遍历实现</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">javapublic int sum(int[] arr) &#123;</span><br><span class="line">    int total = 0;</span><br><span class="line">    for (int num : arr) &#123;</span><br><span class="line">        total += num;</span><br><span class="line">    &#125;</span><br><span class="line">    return total;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用 <code>Arrays.stream</code> 和 <code>sum</code>（Java 8）</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">javaimport java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public int sum(int[] arr) &#123;</span><br><span class="line">    return Arrays.stream(arr).sum();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>数组的最小值和最大值</strong>： 你可以通过遍历数组或使用 <code>Arrays.stream</code> 来获取最小值和最大值。</p>
+<p><strong>手动遍历实现</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">javapublic int getMin(int[] arr) &#123;</span><br><span class="line">    int min = arr[0];</span><br><span class="line">    for (int num : arr) &#123;</span><br><span class="line">        if (num &lt; min) &#123;</span><br><span class="line">            min = num;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return min;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public int getMax(int[] arr) &#123;</span><br><span class="line">    int max = arr[0];</span><br><span class="line">    for (int num : arr) &#123;</span><br><span class="line">        if (num &gt; max) &#123;</span><br><span class="line">            max = num;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用 <code>Arrays.stream</code> 和 <code>min</code> &#x2F; <code>max</code>（Java 8）</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">javaimport java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public int getMin(int[] arr) &#123;</span><br><span class="line">    return Arrays.stream(arr).min().orElseThrow(); // 这里使用 `orElseThrow` 来处理空数组的情况</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public int getMax(int[] arr) &#123;</span><br><span class="line">    return Arrays.stream(arr).max().orElseThrow();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>数组排序</strong>： Java 提供了 <code>Arrays.sort()</code> 方法来对数组进行排序。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">javaimport java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public void sortArray(int[] arr) &#123;</span><br><span class="line">    Arrays.sort(arr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>排序后的数组将会是升序排列，如果想要降序排列，可以使用 <code>Comparator</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">javaimport java.util.Arrays;</span><br><span class="line">import java.util.Collections;</span><br><span class="line"></span><br><span class="line">public void sortArrayDescending(int[] arr) &#123;</span><br><span class="line">    Integer[] boxedArray = Arrays.stream(arr).boxed().toArray(Integer[]::new);</span><br><span class="line">    Arrays.sort(boxedArray, Collections.reverseOrder());</span><br><span class="line">    // 如果需要返回 int[] 数组，可以再转换回 int[]</span><br><span class="line">    arr = Arrays.stream(boxedArray).mapToInt(Integer::intValue).toArray();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>查找某个元素是否存在</strong>： 使用 <code>Arrays.binarySearch()</code> 进行二分查找（需要数组已排序），或者使用简单的遍历进行线性查找。</p>
+<p><strong>二分查找（要求数组已排序）</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">javaimport java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public boolean contains(int[] arr, int target) &#123;</span><br><span class="line">    Arrays.sort(arr); // 确保数组已经排序</span><br><span class="line">    int index = Arrays.binarySearch(arr, target);</span><br><span class="line">    return index &gt;= 0; // 如果返回值 &gt;= 0，表示找到了元素</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>线性查找</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">javapublic boolean contains(int[] arr, int target) &#123;</span><br><span class="line">    for (int num : arr) &#123;</span><br><span class="line">        if (num == target) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>复制数组</strong>： <code>Arrays.copyOf()</code> 方法可以方便地复制数组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">javaimport java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public int[] copyArray(int[] arr) &#123;</span><br><span class="line">    return Arrays.copyOf(arr, arr.length); // 复制整个数组</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>数组填充</strong>： <code>Arrays.fill()</code> 可以用来填充数组中的所有元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">javaimport java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public void fillArray(int[] arr, int value) &#123;</span><br><span class="line">    Arrays.fill(arr, value); // 将数组中的每个元素都设置为 value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>反转数组</strong>： 可以手动编写代码或使用 <code>Collections.reverse()</code>，但 <code>int[]</code> 是基本类型数组，因此需要稍微做些处理。</p>
+<p><strong>手动反转</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">javapublic void reverseArray(int[] arr) &#123;</span><br><span class="line">    int start = 0;</span><br><span class="line">    int end = arr.length - 1;</span><br><span class="line">    while (start &lt; end) &#123;</span><br><span class="line">        int temp = arr[start];</span><br><span class="line">        arr[start] = arr[end];</span><br><span class="line">        arr[end] = temp;</span><br><span class="line">        start++;</span><br><span class="line">        end--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>数组去重</strong>： 要去重，通常可以借助 <code>Set</code> 数据结构，或者使用流（Java 8+）来去重。</p>
+<p><strong>使用 <code>Set</code> 去重</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">javaimport java.util.HashSet;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">public int[] removeDuplicates(int[] arr) &#123;</span><br><span class="line">    Set&lt;Integer&gt; set = new HashSet&lt;&gt;();</span><br><span class="line">    for (int num : arr) &#123;</span><br><span class="line">        set.add(num);</span><br><span class="line">    &#125;</span><br><span class="line">    // 转换回数组</span><br><span class="line">    return set.stream().mapToInt(Integer::intValue).toArray();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用 <code>Streams</code> 去重</strong>（Java 8+）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">javaimport java.util.Arrays;</span><br><span class="line"></span><br><span class="line">public int[] removeDuplicates(int[] arr) &#123;</span><br><span class="line">    return Arrays.stream(arr).distinct().toArray();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="总结：-1"><a href="#总结：-1" class="headerlink" title="总结："></a>总结：</h3><ul>
+<li>在 Java 中，<code>int[]</code> 是一个基础的数据结构，操作起来相对简单。</li>
+<li><code>Arrays</code> 类提供了许多便捷的 API 来处理常见的操作，如排序、查找、填充等。</li>
+<li>对于更复杂的操作（如求和、最小值、最大值等），可以使用 Java 8 引入的流（Stream）功能来提高代码的简洁性和可读性。</li>
+</ul>
+<h1 id="Deque"><a href="#Deque" class="headerlink" title="Deque"></a>Deque</h1><p><code>Deque</code>（双端队列）是 Java 集合框架中的一个接口，继承自 <code>Queue</code> 接口，允许从两端插入和删除元素。它提供了比 <code>Queue</code> 更多的操作方法，适用于需要从队列两端进行插入和删除的场景。</p>
+<p><code>Deque</code> 的实现通常是 <code>ArrayDeque</code> 或 <code>LinkedList</code>。</p>
+<h3 id="Deque-常用的-API"><a href="#Deque-常用的-API" class="headerlink" title="Deque 常用的 API"></a><code>Deque</code> 常用的 API</h3><h4 id="1-添加元素的方法"><a href="#1-添加元素的方法" class="headerlink" title="1. 添加元素的方法"></a>1. <strong>添加元素的方法</strong></h4><ul>
+<li><code>void addFirst(E e)</code><br> 在队列的前端插入元素 <code>e</code>。如果队列已满，抛出 <code>IllegalStateException</code>。</li>
+<li><code>void addLast(E e)</code><br> 在队列的末端插入元素 <code>e</code>。如果队列已满，抛出 <code>IllegalStateException</code>。</li>
+<li><code>boolean offerFirst(E e)</code><br> 在队列的前端插入元素 <code>e</code>。如果队列满了，返回 <code>false</code>，而不是抛出异常。</li>
+<li><code>boolean offerLast(E e)</code><br> 在队列的末端插入元素 <code>e</code>。如果队列满了，返回 <code>false</code>，而不是抛出异常。</li>
+</ul>
+<h4 id="2-移除元素的方法"><a href="#2-移除元素的方法" class="headerlink" title="2. 移除元素的方法"></a>2. <strong>移除元素的方法</strong></h4><ul>
+<li><code>E removeFirst()</code><br> 移除并返回队列的第一个元素。队列为空时，抛出 <code>NoSuchElementException</code>。</li>
+<li><code>E removeLast()</code><br> 移除并返回队列的最后一个元素。队列为空时，抛出 <code>NoSuchElementException</code>。</li>
+<li><code>boolean removeFirstOccurrence(Object o)</code><br> 移除队列中首次出现的元素 <code>o</code>（从前端开始搜索）。如果找到并移除元素，则返回 <code>true</code>，否则返回 <code>false</code>。</li>
+<li><code>boolean removeLastOccurrence(Object o)</code><br> 移除队列中最后一次出现的元素 <code>o</code>（从末端开始搜索）。如果找到并移除元素，则返回 <code>true</code>，否则返回 <code>false</code>。</li>
+</ul>
+<h4 id="3-获取元素的方法"><a href="#3-获取元素的方法" class="headerlink" title="3. 获取元素的方法"></a>3. <strong>获取元素的方法</strong></h4><ul>
+<li><code>E getFirst()</code><br> 获取队列的第一个元素，但不移除。队列为空时，抛出 <code>NoSuchElementException</code>。</li>
+<li><code>E getLast()</code><br> 获取队列的最后一个元素，但不移除。队列为空时，抛出 <code>NoSuchElementException</code>。</li>
+<li><code>E peekFirst()</code><br> 获取队列的第一个元素，但不移除。如果队列为空，返回 <code>null</code>。</li>
+<li><code>E peekLast()</code><br> 获取队列的最后一个元素，但不移除。如果队列为空，返回 <code>null</code>。</li>
+</ul>
+<h4 id="4-检查元素的方法"><a href="#4-检查元素的方法" class="headerlink" title="4. 检查元素的方法"></a>4. <strong>检查元素的方法</strong></h4><ul>
+<li><code>boolean isEmpty()</code><br> 检查队列是否为空。如果队列为空，返回 <code>true</code>，否则返回 <code>false</code>。</li>
+<li><code>int size()</code><br> 返回队列中的元素数量。</li>
+</ul>
+<h4 id="5-迭代操作"><a href="#5-迭代操作" class="headerlink" title="5. 迭代操作"></a>5. <strong>迭代操作</strong></h4><ul>
+<li><code>Iterator&lt;E&gt; iterator()</code><br> 返回队列的迭代器。</li>
+<li><code>Iterator&lt;E&gt; descendingIterator()</code><br> 返回队列的逆向迭代器（从队尾到队头迭代）。</li>
+</ul>
+<h4 id="6-清空队列"><a href="#6-清空队列" class="headerlink" title="6. 清空队列"></a>6. <strong>清空队列</strong></h4><ul>
+<li><code>void clear()</code><br>清空队列中的所有元素。</li>
+</ul>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class DequeExample &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Deque&lt;Integer&gt; deque = new ArrayDeque&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        // 添加元素</span><br><span class="line">        deque.addFirst(1);</span><br><span class="line">        deque.addLast(2);</span><br><span class="line">        deque.offerFirst(0);</span><br><span class="line">        deque.offerLast(3);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;Deque: &quot; + deque);</span><br><span class="line"></span><br><span class="line">        // 获取元素</span><br><span class="line">        System.out.println(&quot;First Element: &quot; + deque.getFirst());</span><br><span class="line">        System.out.println(&quot;Last Element: &quot; + deque.getLast());</span><br><span class="line"></span><br><span class="line">        // 移除元素</span><br><span class="line">        System.out.println(&quot;Removed First: &quot; + deque.removeFirst());</span><br><span class="line">        System.out.println(&quot;Removed Last: &quot; + deque.removeLast());</span><br><span class="line"></span><br><span class="line">        // 使用迭代器遍历</span><br><span class="line">        Iterator&lt;Integer&gt; iterator = deque.iterator();</span><br><span class="line">        System.out.print(&quot;Deque elements: &quot;);</span><br><span class="line">        while (iterator.hasNext()) &#123;</span><br><span class="line">            System.out.print(iterator.next() + &quot; &quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出："><a href="#输出：" class="headerlink" title="输出："></a>输出：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Deque: [0, 1, 2, 3]</span><br><span class="line">First Element: 0</span><br><span class="line">Last Element: 3</span><br><span class="line">Removed First: 0</span><br><span class="line">Removed Last: 3</span><br><span class="line">Deque elements: 1 2</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结：-2"><a href="#总结：-2" class="headerlink" title="总结："></a>总结：</h3><p><code>Deque</code> 提供了对双端队列的完全支持，你可以从队列的两端进行元素的插入和删除。通过 <code>ArrayDeque</code> 或 <code>LinkedList</code> 实现 <code>Deque</code> 接口，它支持大量的操作，如插入、删除、查看、检查元素和遍历，能够满足多种双端队列的需求。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/01/29/java%E7%BC%96%E7%A8%8Bapi/">http://example.com/2025/01/29/java%E7%BC%96%E7%A8%8Bapi/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Hexo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/">算法学习</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/01/29/netty/" title="黑马程序员Netty学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">黑马程序员Netty学习笔记</div></div><div class="info-2"><div class="info-item-1">认真的 Netty 源码解析（一）本文又是一篇源码分析文章，其实除了 Doug Lea 的并发包源码，我是不太爱写源码分 - 掘金 1没准以后有用  C10K问题解析-CSDN博客 NIO基础non-blocking io...</div></div></div></a><a class="pagination-related" href="/2025/01/29/JUC/" title="黑马程序员JUC学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">黑马程序员JUC学习笔记</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/04/18/%E5%B7%A6%E7%A8%8B%E4%BA%91%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3%E5%AD%A6%E4%B9%A0/" title="左程云算法思想学习笔记——B站视频（待更新）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-18</div><div class="info-item-2">左程云算法思想学习笔记——B站视频（待更新）</div></div><div class="info-2"><div class="info-item-1">左程云算法思想学习ep3 二进制和位运算123456789101112&lt;&lt; 左移补零&gt;&gt; 右移补符号位&gt;&gt;&gt; 右移补零| 或&amp; 与^ 异或运算~ 取反如何输出一个int型数字的二进制形式for(int i = 31; i &gt;= 0; i++)&#123;	cout&lt;&lt; (num &amp; (1 &lt;&lt; i)) == 0 ? 0 : 1;//判断该数在某一位是否为1&#125;  ep5 对数器的使用1核心思想是用一个已知绝对正确但时空复杂度较高的方法与自己写的代码以随机数生成器生成的数据集为输入，比对输出结果相同与否以验证自己代码是否在所有情况下均为正确  ep6...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Stack"><span class="toc-number">1.</span> <span class="toc-text">Stack</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84-Stack-API%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">常用的 Stack API：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-push-E-item"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. push(E item)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-pop"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. pop()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-peek"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. peek()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-empty"><span class="toc-number">1.1.4.</span> <span class="toc-text">4. empty()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-search-Object-o"><span class="toc-number">1.1.5.</span> <span class="toc-text">5. search(Object o)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-size-%E7%BB%A7%E6%89%BF%E8%87%AA-Vector-%E7%B1%BB"><span class="toc-number">1.1.6.</span> <span class="toc-text">6. size() (继承自 Vector 类)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-clear-%E7%BB%A7%E6%89%BF%E8%87%AA-Vector-%E7%B1%BB"><span class="toc-number">1.1.7.</span> <span class="toc-text">7. clear() (继承自 Vector 类)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#String"><span class="toc-number">2.</span> <span class="toc-text">String</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84-String-API%EF%BC%9A"><span class="toc-number">2.1.</span> <span class="toc-text">常用的 String API：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%88%9B%E5%BB%BA%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">2.1.1.</span> <span class="toc-text">1. 创建和初始化字符串</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">2.1.2.</span> <span class="toc-text">2. 字符串基本操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.1.3.</span> <span class="toc-text">3. 字符串的转换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%8C%B9%E9%85%8D%E4%B8%8E%E6%AF%94%E8%BE%83"><span class="toc-number">2.1.4.</span> <span class="toc-text">4. 字符串的匹配与比较</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E8%BF%9E%E6%8E%A5%E4%B8%8E%E6%9B%BF%E6%8D%A2"><span class="toc-number">2.1.5.</span> <span class="toc-text">5. 字符串的连接与替换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E5%85%B6%E4%BB%96%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.6.</span> <span class="toc-text">6. 其他常用方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E8%BD%AC%E6%8D%A2%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">常见转换方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E4%B8%BA%E6%95%B0%E5%AD%97"><span class="toc-number">3.1.</span> <span class="toc-text">1. 字符串转为数字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%95%B0%E5%AD%97%E8%BD%AC%E4%B8%BA%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">3.2.</span> <span class="toc-text">2. 数字转为字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E6%8B%86%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%89%8B%E5%8A%A8%E6%8B%86%E8%A3%85%E7%AE%B1"><span class="toc-number">3.3.</span> <span class="toc-text">3. 自动拆装箱与手动拆装箱</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.4.</span> <span class="toc-text">4. 基本数据类型之间的转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B6%E4%BB%96%E5%B8%B8%E8%A7%81%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.5.</span> <span class="toc-text">5. 其他常见转换</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HashMap"><span class="toc-number"></span> <span class="toc-text">HashMap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">0.1.</span> <span class="toc-text">1. 基本操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%8E%B7%E5%8F%96%E8%A7%86%E5%9B%BE"><span class="toc-number">0.2.</span> <span class="toc-text">2. 获取视图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%85%B6%E4%BB%96%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95"><span class="toc-number">0.3.</span> <span class="toc-text">3. 其他辅助方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9B%B8%E5%85%B3"><span class="toc-number">0.4.</span> <span class="toc-text">4. 线程安全相关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%87%8D%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">0.5.</span> <span class="toc-text">5. 重要注意事项</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HashSet"><span class="toc-number"></span> <span class="toc-text">HashSet</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C-1"><span class="toc-number">0.1.</span> <span class="toc-text">1. 基本操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C"><span class="toc-number">0.2.</span> <span class="toc-text">2. 批量操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%BF%AD%E4%BB%A3%E6%93%8D%E4%BD%9C"><span class="toc-number">0.3.</span> <span class="toc-text">3. 迭代操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%9B%86%E5%90%88%E8%A7%86%E5%9B%BE"><span class="toc-number">0.4.</span> <span class="toc-text">4. 集合视图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B6%E4%BB%96%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95"><span class="toc-number">0.5.</span> <span class="toc-text">5. 其他辅助方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8"><span class="toc-number">0.6.</span> <span class="toc-text">6. 线程安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E9%87%8D%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">0.7.</span> <span class="toc-text">7. 重要注意事项</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ArrayList"><span class="toc-number"></span> <span class="toc-text">ArrayList</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C-2"><span class="toc-number">0.1.</span> <span class="toc-text">1. 基本操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C-1"><span class="toc-number">0.2.</span> <span class="toc-text">2. 批量操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%BF%AD%E4%BB%A3%E6%93%8D%E4%BD%9C-1"><span class="toc-number">0.3.</span> <span class="toc-text">3. 迭代操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%85%B6%E4%BB%96%E8%BE%85%E5%8A%A9%E6%96%B9%E6%B3%95"><span class="toc-number">0.4.</span> <span class="toc-text">4. 其他辅助方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8"><span class="toc-number">0.5.</span> <span class="toc-text">5. 线程安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E9%87%8D%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">0.6.</span> <span class="toc-text">6. 重要注意事项</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JAVA%E5%B8%B8%E7%94%A8%E5%B8%B8%E9%87%8F"><span class="toc-number"></span> <span class="toc-text">JAVA常用常量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Integer-MAX-VALUE"><span class="toc-number">0.1.</span> <span class="toc-text">1. Integer.MAX_VALUE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Integer-MIN-VALUE"><span class="toc-number">0.2.</span> <span class="toc-text">2. Integer.MIN_VALUE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">0.3.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-int-%E6%93%8D%E4%BD%9C%E5%8F%8A%E5%85%B6-API"><span class="toc-number"></span> <span class="toc-text">常见的 int[] 操作及其 API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A-1"><span class="toc-number">0.1.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Deque"><span class="toc-number"></span> <span class="toc-text">Deque</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Deque-%E5%B8%B8%E7%94%A8%E7%9A%84-API"><span class="toc-number">0.1.</span> <span class="toc-text">Deque 常用的 API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">0.1.1.</span> <span class="toc-text">1. 添加元素的方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">0.1.2.</span> <span class="toc-text">2. 移除元素的方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">0.1.3.</span> <span class="toc-text">3. 获取元素的方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E6%A3%80%E6%9F%A5%E5%85%83%E7%B4%A0%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">0.1.4.</span> <span class="toc-text">4. 检查元素的方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E8%BF%AD%E4%BB%A3%E6%93%8D%E4%BD%9C"><span class="toc-number">0.1.5.</span> <span class="toc-text">5. 迭代操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E6%B8%85%E7%A9%BA%E9%98%9F%E5%88%97"><span class="toc-number">0.1.6.</span> <span class="toc-text">6. 清空队列</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">0.2.</span> <span class="toc-text">示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%EF%BC%9A"><span class="toc-number">0.3.</span> <span class="toc-text">输出：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A-2"><span class="toc-number">0.4.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/29/hello-world/" title="Hello World">Hello World</a><time datetime="2025-05-29T10:41:10.390Z" title="发表于 2025-05-29 18:41:10">2025-05-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/18/%E5%B7%A6%E7%A8%8B%E4%BA%91%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3%E5%AD%A6%E4%B9%A0/" title="左程云算法思想学习笔记——B站视频（待更新）">左程云算法思想学习笔记——B站视频（待更新）</a><time datetime="2025-04-18T14:16:13.000Z" title="发表于 2025-04-18 22:16:13">2025-04-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/java%E7%BC%96%E7%A8%8Bapi/" title="Java刷题一些常见的api">Java刷题一些常见的api</a><time datetime="2025-01-29T14:14:24.000Z" title="发表于 2025-01-29 22:14:24">2025-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/JUC/" title="黑马程序员JUC学习笔记">黑马程序员JUC学习笔记</a><time datetime="2025-01-29T14:14:24.000Z" title="发表于 2025-01-29 22:14:24">2025-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/netty/" title="黑马程序员Netty学习笔记">黑马程序员Netty学习笔记</a><time datetime="2025-01-29T14:12:24.000Z" title="发表于 2025-01-29 22:12:24">2025-01-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By John Doe</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

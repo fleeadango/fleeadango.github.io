@@ -1,0 +1,289 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>JDBC学习笔记 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基础篇引言1通过Java程序对数据库中数据做增删改查的需求催生了JDBC的出现    JDBC概念123Java DataBase Connectivityjava提供的一组独立于任何数据库管理系统的API，厂商根据规范提供数据库驱动jar包    核心组成接口规范123保持JAVA代码的一致性接口存储在java.sql和javax.sql包下    实现规范1厂商自行实现，并将内容封装为jar包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDBC学习笔记">
+<meta property="og:url" content="http://example.com/2024/04/30/JDBC/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="基础篇引言1通过Java程序对数据库中数据做增删改查的需求催生了JDBC的出现    JDBC概念123Java DataBase Connectivityjava提供的一组独立于任何数据库管理系统的API，厂商根据规范提供数据库驱动jar包    核心组成接口规范123保持JAVA代码的一致性接口存储在java.sql和javax.sql包下    实现规范1厂商自行实现，并将内容封装为jar包">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2024-04-30T14:16:13.000Z">
+<meta property="article:modified_time" content="2025-05-30T06:07:56.315Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="开发技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "JDBC学习笔记",
+  "url": "http://example.com/2024/04/30/JDBC/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2024-04-30T14:16:13.000Z",
+  "dateModified": "2025-05-30T06:07:56.315Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/04/30/JDBC/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'JDBC学习笔记',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">JDBC学习笔记</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">JDBC学习笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-30T14:16:13.000Z" title="发表于 2024-04-30 22:16:13">2024-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-30T06:07:56.315Z" title="更新于 2025-05-30 14:07:56">2025-05-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过Java程序对数据库中数据做增删改查的需求催生了JDBC的出现</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JDBC"><a href="#JDBC" class="headerlink" title="JDBC"></a>JDBC</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Java DataBase Connectivity</span><br><span class="line"></span><br><span class="line">java提供的一组独立于任何数据库管理系统的API，厂商根据规范提供数据库驱动jar包</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="核心组成"><a href="#核心组成" class="headerlink" title="核心组成"></a>核心组成</h3><h4 id="接口规范"><a href="#接口规范" class="headerlink" title="接口规范"></a>接口规范</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">保持JAVA代码的一致性</span><br><span class="line"></span><br><span class="line">接口存储在java.sql和javax.sql包下</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="实现规范"><a href="#实现规范" class="headerlink" title="实现规范"></a>实现规范</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">厂商自行实现，并将内容封装为jar包</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="快速入门"><a href="#快速入门" class="headerlink" title="快速入门"></a>快速入门</h2><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241025192836771.png" alt="image-20241025192836771"></p>
+<h2 id="核心API理解"><a href="#核心API理解" class="headerlink" title="核心API理解"></a>核心API理解</h2><h3 id="forName"><a href="#forName" class="headerlink" title="forName"></a>forName</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">forName(&quot;com.mysql.cj.jbdc.Driver&quot;)方法</span><br><span class="line">也可以替换为</span><br><span class="line">forName(new Driver());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">从JDK6开始不用手动注册，上述两种写法都不需要</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Connection"><a href="#Connection" class="headerlink" title="Connection"></a>Connection</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">除了建立数据库连接外还负责管理事务，提供commit和rollback方法，用于提交和回滚事务</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Url格式如下</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241025193507114.png" alt="image-20241025193507114"></p>
+<h3 id="Statement"><a href="#Statement" class="headerlink" title="Statement"></a>Statement</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">执行SQL语句与数据库交互</span><br><span class="line"></span><br><span class="line">执行SQL语句时可能会产生SQL注入攻击问题</span><br></pre></td></tr></table></figure>
+
+<h3 id="PreparedStatement"><a href="#PreparedStatement" class="headerlink" title="PreparedStatement"></a>PreparedStatement</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Statement的子接口，用于执行预编译的SQL查询，也就是在创建该对象时就会预编译SQL语句，固定SQL语句来防止SQL注入问题。支持参数化查询，?作为占位符，传入的参数用一对单引号包裹，且传递内容都当作值，如果是特殊符号会进行转义处理，来防止SQL注入问题。</span><br><span class="line"></span><br><span class="line">同一SQL语句多次执行的情况下可以复用，不必每次都重新编译和解析</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ResultSet"><a href="#ResultSet" class="headerlink" title="ResultSet"></a>ResultSet</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">遍历查询语句返回的</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JDBC搭建步骤"><a href="#JDBC搭建步骤" class="headerlink" title="JDBC搭建步骤"></a>JDBC搭建步骤</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在项目下创建lib文件夹，将下载的驱动jar包复制到文件夹里</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">那些增删改查这里就不写了，太基础了</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="进阶篇"><a href="#进阶篇" class="headerlink" title="进阶篇"></a>进阶篇</h1><h2 id="JDBC扩展"><a href="#JDBC扩展" class="headerlink" title="JDBC扩展"></a>JDBC扩展</h2><h3 id="实体类"><a href="#实体类" class="headerlink" title="实体类"></a>实体类</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使用JDBC与数据库交互时，数据是零散的，不好维护管理，现在定义一个实体类来作为一行数据的载体，使得一个表对应一个类，一行数据对应一个对象，一列对应一个属性</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ORM"><a href="#ORM" class="headerlink" title="ORM"></a>ORM</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Object Relational Mapping</span><br><span class="line">即对象到关系数据库的映射</span><br><span class="line"></span><br><span class="line">JDBC是手动ORM框架</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241025215646847.png" alt="image-20241025215646847"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如果添加多个对象就添加list即可</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="主键回显"><a href="#主键回显" class="headerlink" title="主键回显"></a>主键回显</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">执行新增操作时，在Java程序中获取数据库中插入新数据后的主键值，并赋给Java对象</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241025232631985.png" alt="image-20241025232631985"></p>
+<h3 id="批量操作"><a href="#批量操作" class="headerlink" title="批量操作"></a>批量操作</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">多次操作每次都只单条发送会导致效率低下</span><br><span class="line"></span><br><span class="line">批量操作可以提升多次操作效率</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241025233538026.png" alt="image-20241025233538026"></p>
+<h2 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h2><h3 id="现有问题"><a href="#现有问题" class="headerlink" title="现有问题"></a>现有问题</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">每次操作数据库都要获取新连接，使用完毕就close释放，频繁创建和销毁浪费资源</span><br><span class="line"></span><br><span class="line">连接的数量无法控制，对服务器压力大</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="连接池-1"><a href="#连接池-1" class="headerlink" title="连接池"></a>连接池</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">数据库连接对象的缓冲区</span><br><span class="line"></span><br><span class="line">配置连接池，使得创建连接，管理连接，释放连接由连接池管理</span><br><span class="line"></span><br><span class="line">池中无连接可用，且未达到上限时，连接池会新建1连接</span><br><span class="line"></span><br><span class="line">连接达到上限，用户请求等待，可设置超时时间</span><br><span class="line"></span><br><span class="line"> Java使用javax.sql.DataSourse接口进行更规范，所有第三方连接池都实现此接口，所有连接池获取连接和回收连接的方法都一样，不同的只有性能和扩展功能</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="常见连接池"><a href="#常见连接池" class="headerlink" title="常见连接池"></a>常见连接池</h3><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026090556078.png" alt="image-20241026090556078"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026090613292.png" alt="image-20241026090613292"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026090648545.png" alt="image-20241026090648545"></p>
+<h3 id="Druid连接池使用"><a href="#Druid连接池使用" class="headerlink" title="Druid连接池使用"></a>Druid连接池使用</h3><h4 id="硬编码"><a href="#硬编码" class="headerlink" title="硬编码"></a>硬编码</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">将连接池的配置信息和Java代码耦合在一起</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026091812814.png" alt="image-20241026091812814"></p>
+<h4 id="软编码"><a href="#软编码" class="headerlink" title="软编码"></a>软编码</h4><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026094310922.png" alt="image-20241026094310922"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026094334672.png" alt="image-20241026094334672"></p>
+<h3 id="HikariCP连接池使用"><a href="#HikariCP连接池使用" class="headerlink" title="HikariCP连接池使用"></a>HikariCP连接池使用</h3><h4 id="硬编码-1"><a href="#硬编码-1" class="headerlink" title="硬编码"></a>硬编码</h4><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026095340911.png" alt="image-20241026095340911"></p>
+<h4 id="软编码-1"><a href="#软编码-1" class="headerlink" title="软编码"></a>软编码</h4><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026095301815.png" alt="image-20241026095301815"></p>
+<h1 id="高级篇"><a href="#高级篇" class="headerlink" title="高级篇"></a>高级篇</h1><h2 id="JDBC优化及工具类封装"><a href="#JDBC优化及工具类封装" class="headerlink" title="JDBC优化及工具类封装"></a>JDBC优化及工具类封装</h2><h3 id="现有问题-1"><a href="#现有问题-1" class="headerlink" title="现有问题"></a>现有问题</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">创建连接池，获取连接及连接的回收这部分代码存在冗余</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Thread-ocal"><a href="#Thread-ocal" class="headerlink" title="Thread.ocal"></a>Thread.ocal</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">java.lang.threadlocal，解决多线程程序的并发问题，通常用来在多线程中管理共享数据库连接，Session等</span><br><span class="line"></span><br><span class="line">ThreadLocal用于保存某个线程共享变量，Java中每一个线程对象中都有一个ThreadLocalMap&lt;ThreadLocal, Object&gt;, key为ThreadLocal, 而 Object为该线程的共享变量</span><br><span class="line"></span><br><span class="line">map通过ThreadLocal的set和get方法操作，对于同一个static ThreadLocal,不同线程只能从中get, set, remove自己的变量，不会影响其它线程的变量</span><br><span class="line"></span><br><span class="line">功能总结如下：</span><br><span class="line">	进行对象跨层传递时，使用ThreadLocal可以避免多次传递，打破层次间约束</span><br><span class="line"></span><br><span class="line">	线程间数据隔离</span><br><span class="line"></span><br><span class="line">	可以进行事务操作，用于存储线程事务信息</span><br><span class="line"></span><br><span class="line">	数据库连接，Session会话管理</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="JDBC工具类封装"><a href="#JDBC工具类封装" class="headerlink" title="JDBC工具类封装"></a>JDBC工具类封装</h3><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026110007312.png" alt="image-20241026110007312"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026110139026.png" alt="image-20241026110139026"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026110117083.png" alt="image-20241026110117083"></p>
+<h2 id="DAO封装及BaseDAO工具类"><a href="#DAO封装及BaseDAO工具类" class="headerlink" title="DAO封装及BaseDAO工具类"></a>DAO封装及BaseDAO工具类</h2><h3 id="DAO概念"><a href="#DAO概念" class="headerlink" title="DAO概念"></a>DAO概念</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Data Access Object, 数据访问对象</span><br><span class="line"></span><br><span class="line">数据在Java中通常以对象形式存在</span><br><span class="line"></span><br><span class="line">在Java操作数据库时，我们将对同一张表的增删改查操作同一维护起来，维护的这个类就是DAO层，DAO层只关注对数据库的操作，供业务层Service调用</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="BaseDAO概念"><a href="#BaseDAO概念" class="headerlink" title="BaseDAO概念"></a>BaseDAO概念</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">基本上每一个数据表都应该有一个对应的DAO接口及其实现类，但是对所有表的操作代码重复度都很高，可以抽取公共代码，故为所有DAO的实现类抽取一个公共的父类，复用增删改查的基本操作，称为BaseDAO</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">执行更新的基础方法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026113007782.png" alt="image-20241026113007782"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">实现一个查询的基础方法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026114942284.png" alt="image-20241026114942284"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026115006874.png" alt="image-20241026115006874"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">新增一个返回单行单列的特殊处理方法</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026115227764.png" alt="image-20241026115227764"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">下面是实际数据接口实现类中的代码</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026120451711.png" alt="image-20241026120451711"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026120518106.png" alt="image-20241026120518106"></p>
+<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026120411833.png" alt="image-20241026120411833"></p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SQL语句执行的缓存机制</span><br><span class="line"></span><br><span class="line">原子性，一致性，隔离性，持久性</span><br><span class="line"></span><br><span class="line">自动提交：每条语句自动存储在一个事务中，执行成功自动提交，执行性失败自动回滚</span><br><span class="line"></span><br><span class="line">手动提交：手动开启事务，添加语句，手动提交或手动回滚</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="JDBC中事务实现"><a href="#JDBC中事务实现" class="headerlink" title="JDBC中事务实现"></a>JDBC中事务实现</h3><h4 id="核心代码"><a href="#核心代码" class="headerlink" title="核心代码"></a>核心代码</h4><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026121730653.png" alt="image-20241026121730653"></p>
+<h3 id="JDBC事务代码实现"><a href="#JDBC事务代码实现" class="headerlink" title="JDBC事务代码实现"></a>JDBC事务代码实现</h3><p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20241026122453192.png" alt="image-20241026122453192"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/04/30/JDBC/">http://example.com/2024/04/30/JDBC/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Hexo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/">开发技术</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/03/12/java%E8%AF%AD%E8%A8%80/" title="黑马程序员Java语言学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">黑马程序员Java语言学习笔记</div></div><div class="info-2"><div class="info-item-1">JAVA语言基础JAVA技术体系JAVA SE（standard edition）标准版 JAVA EE（enterprise edition）企业版 JAVA ME（micro edition）小型版（不如安卓或者IOS的解决方案） 构建JAVA开发环境使用JAVA需要安装JDK（LTS为长期维护版本） 验证JDK是否安装成功：12345看java,javac是否可用看java,javac的版本号是否无问题	命令行输入java -version			javac...</div></div></div></a><a class="pagination-related" href="/2024/04/30/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90%E4%B8%8E%E8%AE%BE%E8%AE%A1%E7%AC%94%E8%AE%B0/" title="算法分析与设计笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">算法分析与设计笔记</div></div><div class="info-2"><div class="info-item-1">a052算法分析与设计笔记导引及数学基础分析算法1算法分析： 对一个算法需要多少计算时间和存储空间，做定量分析  使用时间标准度量单位12345缺陷：依赖于特定计算机计算速度依赖于算法实现的质量依赖于使用哪种编译器将程序转化为机器语言对实际运行时间计时比较困难  统计算法每一步操作的执行次数1过于困难，没有必要  正确方式12找出算法中最重要的操作（对总运行时间贡献最大的操作）基本操作计算算法中基本操作运行的次数    函数时空复杂度的渐进表示大O表示 123严格意义上O(g(n))实际上表示的是一个集合渐进上限无限多，希望尽可能给出精确的渐进上限  12345证明f(n) = O(g(n))找到使定理成立的常数n0和c即可证明f(n) 不等于 O(g(n))对于任何正常数n0和c，存在n1 &gt;= n0 使得定理不成立即可  大$\Omega$表示法 1234567g(n)是f(n)的渐进下限证明f(n) = Omega(g(n))找到使定理成立的常数n0和c即可证明f(n) 不等于 Omega(g(n))对于任何正常数n0和c，存在n1 &gt;= n0...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/01/21/rabbitMQ/" title="黑马程序员RabbitMQ学习笔记（待更新）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-21</div><div class="info-item-2">黑马程序员RabbitMQ学习笔记（待更新）</div></div><div class="info-2"><div class="info-item-1">基础篇同步与异步同步调用1234567优势：时效性强，等待到结果才返回问题：拓展性差性能下降级联失败问题（调用的服务迟迟不响应导致当前服务资源耗尽）    异步调用1234三个角色消息发送者：调用方信息代理：管理、暂存、转发消息消息接收者：服务提供方   12345678910优势：解除耦合，扩展性强无需等待，性能好故障隔离缓存信息，流量的削峰填谷问题：不能立即得到调用结果，时效性差不确定下游业务执行是否成功业务安全依赖于Broker的可靠性        MQ技术选型1存放消息的队列。异步调用中的Broker   123456789ErLang是面向并发的语言RabbitMQ和ActiveMQ连接的微服务可以是其他语言，而RocketMQ只能使用java语言Kafka以吞吐量为优势，但可靠性一般，可以解决大量日志信息部署到日志平台的需求RabbitMQ可靠性强，消息延迟非常短RabbitMQ与RocketMQ使用较多    数据隔离1下面是基础架构   SpringAMQP12345678AMQP Advanced Message Queuing...</div></div></div></a><a class="pagination-related" href="/2025/01/29/JUC/" title="黑马程序员JUC学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-29</div><div class="info-item-2">黑马程序员JUC学习笔记</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a><a class="pagination-related" href="/2025/01/29/netty/" title="黑马程序员Netty学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-29</div><div class="info-item-2">黑马程序员Netty学习笔记</div></div><div class="info-2"><div class="info-item-1">认真的 Netty 源码解析（一）本文又是一篇源码分析文章，其实除了 Doug Lea 的并发包源码，我是不太爱写源码分 - 掘金 1没准以后有用  C10K问题解析-CSDN博客 NIO基础non-blocking io...</div></div></div></a><a class="pagination-related" href="/2023/07/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="黑马程序员Mysql学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-21</div><div class="info-item-2">黑马程序员Mysql学习笔记</div></div><div class="info-2"><div class="info-item-1">数据库学习笔记基本学习要求![屏幕截图 2023-07-25 092220](C:\Users\THECHOSEN\Desktop\数据库笔记图片\屏幕截图 2023-07-25 092220.png)    基础篇MySQL概述概念1234567数据库是存储数据的仓库，数据有组织的进行存储关系型数据库是建立在关系模型基础上，用多张相互连接的二维表组成的数据库数据库管理系统，操纵和管理数据库的大型软件SQL，操作关系型数据库的编程语言，定义了一套操作关系型数据库统一标准    配置并连接1234方法一：打开“服务”，找到MySQL80，将其启动方法二：用系统自带的命令行工具执行指令（需要先配置PATH环境变量，在path内添加一个到mysql server 8.0/bin/的路径）mysql [-h 127.0.0.1] [-p 3306] -u root...</div></div></div></a><a class="pagination-related" href="/2024/11/20/ssm%E6%A1%86%E6%9E%B6/" title="黑马程序员ssm框架学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-20</div><div class="info-item-2">黑马程序员ssm框架学习笔记</div></div><div class="info-2"><div class="info-item-1">Spring12345其实是在学习SpringFrameWorkSpring5.0需要jdk8及以上进行支持Spring中的配置学习是为了熟悉原理，而注解的学习是为了简便开发  Spring Framework系统架构 1AOP可以在不影响程序的前提下增强程序的功能  核心容器核心概念（IoC&#x2F;DI）1目的是充分解耦，使用对象时可以直接从IoC容器中获取到绑定好所有依赖关系的bean    IoC12345Inversion of Control...</div></div></div></a><a class="pagination-related" href="/2025/01/12/redis/" title="黑马程序员Redis学习笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-12</div><div class="info-item-2">黑马程序员Redis学习笔记</div></div><div class="info-2"><div class="info-item-1">基础篇认识NoSQL对比SQL和NoSQL123456789扩展性处：主要是说	SQL型数据库的性能主要取决于其所处机器的性能（若要分库需要引入第三方组件）	NoSQL型数据库天然支持数据在多个节点上的存储（会对每条数据生成唯一HASHID来判断该数据应该存储在哪个结点）	BASE是指:	BA: Basically Availible(是指允许分布式系统中某些部分出现故障，系统的其余部分依然可以用)	S: Soft State(在数据处理过程中，允许这个过程，存在数据状态暂时不一致的情况。但经过纠错处理，最终会一致)	E: Eventually Consistent(NoSQL的软状态允许数据处理过程的暂时不一致，但是最终处理结果将是一致的，说明NoSQL对数据处理过程可以有短暂的时间间隔，也允许分更细的步骤一个一个地处理，最后数据达到一致即可)	   认识Redis12345678910111213141516Remote Dictionary...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%AF%87"><span class="toc-number">1.</span> <span class="toc-text">基础篇</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC"><span class="toc-number">1.2.</span> <span class="toc-text">JDBC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.2.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%84%E6%88%90"><span class="toc-number">1.2.2.</span> <span class="toc-text">核心组成</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E8%A7%84%E8%8C%83"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">接口规范</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E8%A7%84%E8%8C%83"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">实现规范</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="toc-number">1.3.</span> <span class="toc-text">快速入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83API%E7%90%86%E8%A7%A3"><span class="toc-number">1.4.</span> <span class="toc-text">核心API理解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#forName"><span class="toc-number">1.4.1.</span> <span class="toc-text">forName</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Connection"><span class="toc-number">1.4.2.</span> <span class="toc-text">Connection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Statement"><span class="toc-number">1.4.3.</span> <span class="toc-text">Statement</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PreparedStatement"><span class="toc-number">1.4.4.</span> <span class="toc-text">PreparedStatement</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResultSet"><span class="toc-number">1.4.5.</span> <span class="toc-text">ResultSet</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC%E6%90%AD%E5%BB%BA%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.5.</span> <span class="toc-text">JDBC搭建步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E7%AF%87"><span class="toc-number">2.</span> <span class="toc-text">进阶篇</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC%E6%89%A9%E5%B1%95"><span class="toc-number">2.1.</span> <span class="toc-text">JDBC扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="toc-number">2.1.1.</span> <span class="toc-text">实体类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ORM"><span class="toc-number">2.1.2.</span> <span class="toc-text">ORM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E9%94%AE%E5%9B%9E%E6%98%BE"><span class="toc-number">2.1.3.</span> <span class="toc-text">主键回显</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C"><span class="toc-number">2.1.4.</span> <span class="toc-text">批量操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="toc-number">2.2.</span> <span class="toc-text">连接池</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E6%9C%89%E9%97%AE%E9%A2%98"><span class="toc-number">2.2.1.</span> <span class="toc-text">现有问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%B1%A0-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">连接池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="toc-number">2.2.3.</span> <span class="toc-text">常见连接池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Druid%E8%BF%9E%E6%8E%A5%E6%B1%A0%E4%BD%BF%E7%94%A8"><span class="toc-number">2.2.4.</span> <span class="toc-text">Druid连接池使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AC%E7%BC%96%E7%A0%81"><span class="toc-number">2.2.4.1.</span> <span class="toc-text">硬编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AF%E7%BC%96%E7%A0%81"><span class="toc-number">2.2.4.2.</span> <span class="toc-text">软编码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HikariCP%E8%BF%9E%E6%8E%A5%E6%B1%A0%E4%BD%BF%E7%94%A8"><span class="toc-number">2.2.5.</span> <span class="toc-text">HikariCP连接池使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AC%E7%BC%96%E7%A0%81-1"><span class="toc-number">2.2.5.1.</span> <span class="toc-text">硬编码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AF%E7%BC%96%E7%A0%81-1"><span class="toc-number">2.2.5.2.</span> <span class="toc-text">软编码</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E7%AF%87"><span class="toc-number">3.</span> <span class="toc-text">高级篇</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC%E4%BC%98%E5%8C%96%E5%8F%8A%E5%B7%A5%E5%85%B7%E7%B1%BB%E5%B0%81%E8%A3%85"><span class="toc-number">3.1.</span> <span class="toc-text">JDBC优化及工具类封装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E6%9C%89%E9%97%AE%E9%A2%98-1"><span class="toc-number">3.1.1.</span> <span class="toc-text">现有问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thread-ocal"><span class="toc-number">3.1.2.</span> <span class="toc-text">Thread.ocal</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JDBC%E5%B7%A5%E5%85%B7%E7%B1%BB%E5%B0%81%E8%A3%85"><span class="toc-number">3.1.3.</span> <span class="toc-text">JDBC工具类封装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DAO%E5%B0%81%E8%A3%85%E5%8F%8ABaseDAO%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="toc-number">3.2.</span> <span class="toc-text">DAO封装及BaseDAO工具类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAO%E6%A6%82%E5%BF%B5"><span class="toc-number">3.2.1.</span> <span class="toc-text">DAO概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BaseDAO%E6%A6%82%E5%BF%B5"><span class="toc-number">3.2.2.</span> <span class="toc-text">BaseDAO概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.2.2.1.</span> <span class="toc-text">实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1"><span class="toc-number">3.3.</span> <span class="toc-text">事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JDBC%E4%B8%AD%E4%BA%8B%E5%8A%A1%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.3.1.</span> <span class="toc-text">JDBC中事务实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E4%BB%A3%E7%A0%81"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">核心代码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JDBC%E4%BA%8B%E5%8A%A1%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.3.2.</span> <span class="toc-text">JDBC事务代码实现</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/05/29/hello-world/" title="Hello World">Hello World</a><time datetime="2025-05-29T10:41:10.390Z" title="发表于 2025-05-29 18:41:10">2025-05-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/18/%E5%B7%A6%E7%A8%8B%E4%BA%91%E7%AE%97%E6%B3%95%E6%80%9D%E6%83%B3%E5%AD%A6%E4%B9%A0/" title="左程云算法思想学习笔记——B站视频（待更新）">左程云算法思想学习笔记——B站视频（待更新）</a><time datetime="2025-04-18T14:16:13.000Z" title="发表于 2025-04-18 22:16:13">2025-04-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/java%E7%BC%96%E7%A8%8Bapi/" title="Java刷题一些常见的api">Java刷题一些常见的api</a><time datetime="2025-01-29T14:14:24.000Z" title="发表于 2025-01-29 22:14:24">2025-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/JUC/" title="黑马程序员JUC学习笔记">黑马程序员JUC学习笔记</a><time datetime="2025-01-29T14:14:24.000Z" title="发表于 2025-01-29 22:14:24">2025-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/29/netty/" title="黑马程序员Netty学习笔记">黑马程序员Netty学习笔记</a><time datetime="2025-01-29T14:12:24.000Z" title="发表于 2025-01-29 22:12:24">2025-01-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By John Doe</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
