@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/butterfly-icon.png">
 <meta property="article:published_time" content="2025-01-29T14:12:24.000Z">
-<meta property="article:modified_time" content="2025-05-30T04:53:37.345Z">
+<meta property="article:modified_time" content="2025-05-30T05:02:44.714Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="开发技术">
 <meta name="twitter:card" content="summary">
@@ -18,7 +18,7 @@
   "url": "http://example.com/2025/01/29/netty/",
   "image": "http://example.com/img/butterfly-icon.png",
   "datePublished": "2025-01-29T14:12:24.000Z",
-  "dateModified": "2025-05-30T04:53:37.345Z",
+  "dateModified": "2025-05-30T05:02:44.714Z",
   "author": [
     {
       "@type": "Person",
@@ -159,7 +159,7 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">黑马程序员Netty学习笔记</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">黑马程序员Netty学习笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-29T14:12:24.000Z" title="发表于 2025-01-29 22:12:24">2025-01-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-30T04:53:37.345Z" title="更新于 2025-05-30 12:53:37">2025-05-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903704487804941">认真的 Netty 源码解析（一）本文又是一篇源码分析文章，其实除了 Doug Lea 的并发包源码，我是不太爱写源码分 - 掘金</a></p>
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">黑马程序员Netty学习笔记</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">黑马程序员Netty学习笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-29T14:12:24.000Z" title="发表于 2025-01-29 22:12:24">2025-01-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-30T05:02:44.714Z" title="更新于 2025-05-30 13:02:44">2025-05-30</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903704487804941">认真的 Netty 源码解析（一）本文又是一篇源码分析文章，其实除了 Doug Lea 的并发包源码，我是不太爱写源码分 - 掘金</a></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">没准以后有用</span><br></pre></td></tr></table></figure>
 
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/chinawangfei/article/details/102780959">C10K问题解析-CSDN博客</a></p>
@@ -621,7 +621,7 @@
 <ul>
 <li>处理read()事件</li>
 </ul>
-<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250213232806390.png" alt="image-20250213232806390"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250213232806390.png" alt="image-20250213232806390"></p>
 <ul>
 <li>selector在处理过selectedKeys中的任务后，需要手动将该任务对应的key删除，因为selector只会不断地向selectedKeys中添加key，而不会删除key，所以要手动调用remove()方法</li>
 </ul>
@@ -688,7 +688,7 @@
 </li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214010500201.png" alt="image-20250214010500201"></p>
-<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214010518837.png" alt="image-20250214010518837"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214010518837.png" alt="image-20250214010518837"></p>
 <ul>
 <li><p>利用多线程优化，充分利用多核CPU</p>
 <ul>
@@ -841,7 +841,7 @@
 <h1 id="Netty入门"><a href="#Netty入门" class="headerlink" title="Netty入门"></a>Netty入门</h1><p><strong>是什么</strong></p>
 <p>Netty是一个异步的（多线程），基于事件驱动的网络应用框架，用于快速开发可维护、高性能的网络服务器和客户端</p>
 <p><strong>Netty的地位</strong></p>
-<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214122838411.png" alt="image-20250214122838411"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214122838411.png" alt="image-20250214122838411"></p>
 <p><strong>Netty的优势</strong></p>
 <ul>
 <li>Netty vs NIO<ul>
@@ -861,7 +861,7 @@
 <ul>
 <li>加入依赖</li>
 </ul>
-<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214123544169.png" alt="image-20250214123544169"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214123544169.png" alt="image-20250214123544169"></p>
 <ul>
 <li><p>服务器端代码</p>
 <ul>
@@ -965,7 +965,7 @@
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214143146176.png" alt="image-20250214143146176"></p>
 <p>对服务端进行分工细化，即分化出ServerSocketChannel和SocketChannel</p>
-<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214143841149.png" alt="image-20250214143841149"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214143841149.png" alt="image-20250214143841149"></p>
 <p>对服务端的handler进行分工细化，创建新的handler处理中间任务</p>
 <p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214144422111.png" alt="image-20250214144422111"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214144336319.png" alt="image-20250214144336319"></p>
@@ -1051,7 +1051,7 @@
 </ul>
 <h4 id="EmbeddedChannel"><a href="#EmbeddedChannel" class="headerlink" title="EmbeddedChannel"></a><strong>EmbeddedChannel</strong></h4><p>用来测试的Channel，可以在不启动客户端的情况下模拟服务端的执行</p>
 <p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214183413025.png" alt="image-20250214183413025"></p>
-<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250214183438191.png" alt="image-20250214183438191"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250214183438191.png" alt="image-20250214183438191"></p>
 <h3 id="ByteBuf"><a href="#ByteBuf" class="headerlink" title="ByteBuf"></a>ByteBuf</h3><p>对字节数据的封装</p>
 <h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个默认的ByteBuf（池化基于直接内存的ByteBuf），初始容量为10</span></span><br><span class="line"><span class="type">ByteBuf</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBufAllocator.DEFAULT.buffer(<span class="number">10</span>);</span><br><span class="line">log(buffer);</span><br></pre></td></tr></table></figure>
 
@@ -1688,7 +1688,7 @@
 <li>inEventLoop()方法，判断当前线程和eventLoop线程是否是同一个线程</li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250216024610604.png" alt="image-20250216024610604"></p>
-<p><img src="C:\Users\THECHOSEN\AppData\Roaming\Typora\typora-user-images\image-20250216024631982.png" alt="image-20250216024631982"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/fleeadango/blog_pics@master/img/image-20250216024631982.png" alt="image-20250216024631982"></p>
 <ul>
 <li>回到execute方法中，显然进入了if分支中的startThread()方法</li>
 </ul>
